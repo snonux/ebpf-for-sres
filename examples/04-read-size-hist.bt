@@ -1,0 +1,8 @@
+#!/usr/bin/env bpftrace
+// One-liner 3: histogram of bytes returned by successful read() calls.
+// Run: sudo ./04-read-size-hist.bt   (Ctrl-C prints the histogram)
+tracepoint:syscalls:sys_exit_read
+/args.ret > 0/
+{
+    @bytes = hist(args.ret);
+}

@@ -1,0 +1,18 @@
+<section id="ior-handler" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">ior in the kernel</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">The handler for openat, slightly trimmed</h2>
+</div>
+<div style="display:flex; gap:40px; align-items:start">
+<div style="background:#16203A; border-radius:16px; padding:28px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#E6E9EF; white-space:nowrap"><span style="color:#F2A65A">SEC("tracepoint/syscalls/sys_enter_openat")</span><br>int handle_sys_enter_openat(struct syscall_trace_enter *ctx) {<br>&#160;&#160;&#160;&#160;__u32 pid, tid;<br>&#160;&#160;&#160;&#160;if (filter(&amp;pid, &amp;tid))<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return 0;<br>&#160;&#160;&#160;&#160;struct open_event *ev = bpf_ringbuf_reserve(&amp;event_map,<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;sizeof(struct open_event), 0);<br>&#160;&#160;&#160;&#160;if (!ev)<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return 0;&#160;&#160;<span style="color:#93A3BF">// buffer full: event dropped</span><br>&#160;&#160;&#160;&#160;ev-&gt;event_type = ENTER_OPEN_EVENT;<br>&#160;&#160;&#160;&#160;ev-&gt;pid = pid; ev-&gt;tid = tid;<br>&#160;&#160;&#160;&#160;ev-&gt;time = bpf_ktime_get_boot_ns();<br>&#160;&#160;&#160;&#160;bpf_probe_read_user_str(ev-&gt;filename,<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;sizeof(ev-&gt;filename), (void *)ctx-&gt;args[1]);<br>&#160;&#160;&#160;&#160;bpf_get_current_comm(&amp;ev-&gt;comm, sizeof(ev-&gt;comm));<br>&#160;&#160;&#160;&#160;ev-&gt;flags = ctx-&gt;args[2];<br>&#160;&#160;&#160;&#160;bpf_ringbuf_submit(ev, 0);<br>&#160;&#160;&#160;&#160;return 0;<br>}</p>
+</div>
+<div style="flex:1; display:flex; flex-direction:column; gap:24px">
+<p style="font-size:26px; line-height:1.4"><b><span style="color:#A84B14">1</span></b>&#160; One handler per tracepoint, all generated.</p>
+<p style="font-size:26px; line-height:1.4"><b><span style="color:#A84B14">2</span></b>&#160; filter() runs first, so unwanted events never reach user space.</p>
+<p style="font-size:26px; line-height:1.4"><b><span style="color:#A84B14">3</span></b>&#160; Space is reserved in the ring buffer. If it is full, the event is dropped.</p>
+<p style="font-size:26px; line-height:1.4"><b><span style="color:#A84B14">4</span></b>&#160; Only raw facts are recorded. Durations are computed later, in Go.</p>
+</div>
+</div>
+<aside>This is real code from internal/c/generated_tracepoints.c, with blank lines and a memset removed. Walk through it top to bottom. SEC names the tracepoint. filter() compares the current PID and TID with the configured filters. bpf_ringbuf_reserve gives a pointer directly into the shared ring buffer, so there is no extra copy. bpf_probe_read_user_str safely copies the filename from the process's memory; the verifier would reject a plain pointer dereference. Then submit makes the event visible to user space.</aside>
+</section>

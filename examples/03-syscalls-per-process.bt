@@ -1,0 +1,7 @@
+#!/usr/bin/env bpftrace
+// One-liner 2: syscalls per process, counted in a kernel map.
+// Run: sudo ./03-syscalls-per-process.bt   (Ctrl-C prints the counts)
+tracepoint:raw_syscalls:sys_enter
+{
+    @[comm] = count();
+}

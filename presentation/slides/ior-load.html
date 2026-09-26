@@ -1,0 +1,17 @@
+<section id="ior-load" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">ior in user space</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">From embedded object to live probes</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif; font-size:26px; color:#3E4A5E">
+<tr><th style="width:17%; text-align:left; color:#111A2E">Step</th><th style="width:38%; text-align:left; color:#111A2E">libbpfgo call</th><th style="width:45%; text-align:left; color:#111A2E">What happens</th></tr>
+<tr><td>Load</td><td>NewModuleFromBuffer</td><td>ior.bpf.o is baked into the binary with go:embed</td></tr>
+<tr><td>Resize</td><td>GetMap, SetMaxEntries</td><td>ring buffer sized from the -mapSize flag</td></tr>
+<tr><td>Configure</td><td>InitGlobalVariable</td><td>PID and TID filters written into the object</td></tr>
+<tr style="background:#FBE3CF"><td>Verify</td><td>BPFLoadObject</td><td>the kernel verifier checks all 234 programs</td></tr>
+<tr><td>Attach</td><td>AttachTracepoint</td><td>one enter and exit pair per syscall; missing ones are skipped</td></tr>
+<tr><td>Consume</td><td>InitRingBuf, Poll</td><td>events stream into a Go channel</td></tr>
+</table>
+<p style="position:absolute; left:128px; bottom:64px; width:1664px; font-size:24px; color:#6A7385">Source: internal/bpfembed.go, internal/bpfsetup.go, internal/ior_bpfsetup.go</p>
+<aside>This is setupBPFModule in internal/ior_bpfsetup.go. Note the order: maps are resized and globals set before BPFLoadObject, because after loading they are fixed. Attaching goes through a probe manager, which lets you toggle individual syscalls on and off at runtime from the TUI (the o key) and tolerates tracepoints that do not exist on older kernels by logging and skipping them. If the BPF object fails the verifier, ior fails at the load object stage with the verifier's log.</aside>
+</section>

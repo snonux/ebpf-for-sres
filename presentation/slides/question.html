@@ -1,0 +1,14 @@
+<section id="question" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:48px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">The SRE question</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">"What is this process doing right now, and why is it slow?"</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif; font-size:30px; color:#3E4A5E">
+<tr><th style="width:18%; text-align:left; color:#111A2E">Tool</th><th style="width:38%; text-align:left; color:#111A2E">What you get</th><th style="width:44%; text-align:left; color:#111A2E">The catch</th></tr>
+<tr><td>Logs and metrics</td><td>What the app chose to report</td><td>Blind to anything nobody instrumented</td></tr>
+<tr><td>strace</td><td>Every syscall of one process</td><td>ptrace stops the process on each syscall: it can slow it down many times over</td></tr>
+<tr><td>perf</td><td>CPU samples and hardware counters</td><td>Great for "busy on CPU", weaker for "waiting on something"</td></tr>
+<tr style="background:#FBE3CF"><td><b>eBPF</b></td><td>Custom answers from almost any kernel event</td><td>Low overhead, summarised in the kernel, no restart or code change</td></tr>
+</table>
+<aside>Start with the question every on-call engineer asks. Classic tools each have a blind spot. strace is the one most people know, but it works via ptrace and pauses the target on every syscall, which is why you should be careful running it on a busy production process. eBPF lets you ask new questions of a running system without restarting anything.</aside>
+</section>

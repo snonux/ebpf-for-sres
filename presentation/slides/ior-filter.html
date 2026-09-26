@@ -1,0 +1,22 @@
+<section id="ior-filter" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">ior filtering</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Filter in the kernel, configure from Go</h2>
+</div>
+<div style="display:flex; gap:40px; align-items:start">
+<div style="display:flex; flex-direction:column; gap:24px">
+<div style="background:#16203A; border-radius:16px; padding:24px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#E6E9EF; white-space:nowrap">const volatile u32 PID_FILTER = -1;&#160;&#160;<span style="color:#93A3BF">// set before load</span><br>const volatile u32 TID_FILTER = -1;<br><br>static __always_inline int filter(__u32 *pid, __u32 *tid) {<br>&#160;&#160;&#160;&#160;u64 pid_tgid = bpf_get_current_pid_tgid();<br>&#160;&#160;&#160;&#160;*pid = pid_tgid &gt;&gt; 32;<br>&#160;&#160;&#160;&#160;if (*pid == IOR_PID_FILTER) return FILTER;&#160;<span style="color:#93A3BF">// skip ior</span><br>&#160;&#160;&#160;&#160;*tid = pid_tgid &amp; 0xFFFFFFFF;<br>&#160;&#160;&#160;&#160;if (-1 == PID_FILTER || *pid == PID_FILTER)<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if (-1 == TID_FILTER || *tid == TID_FILTER)<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return ACCEPT;<br>&#160;&#160;&#160;&#160;return FILTER;<br>}</p>
+</div>
+<div style="background:#16203A; border-radius:16px; padding:24px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#E6E9EF; white-space:nowrap"><span style="color:#93A3BF">// Go, before the kernel sees the program</span><br>m.InitGlobalVariable("PID_FILTER", uint32(cfg.PidFilter))<br>m.InitGlobalVariable("TID_FILTER", uint32(cfg.TidFilter))<br>m.BPFLoadObject()&#160;&#160;<span style="color:#93A3BF">// the verifier runs here</span></p>
+</div>
+</div>
+<div style="flex:1; display:flex; flex-direction:column; gap:28px">
+<p style="font-size:28px; line-height:1.4"><b>const volatile</b> globals are read-only for the BPF program but patched by user space before loading.</p>
+<p style="font-size:28px; line-height:1.4">ior filters out its own PID, so it never traces itself in a loop.</p>
+<p style="font-size:26px; font-family:'JetBrains Mono', 'Courier New', monospace; background:#E6E9EF; color:#111A2E; padding:16px 24px; border-radius:12px">sudo ior -pid 1234</p>
+</div>
+</div>
+<aside>From internal/c/filter.c, flags.h and internal/bpfsetup.go. The globals are declared const volatile: const lets the verifier treat them as constants and prune dead branches, volatile stops the compiler from optimising them away. libbpfgo's InitGlobalVariable writes the values into the object's read-only data section before BPFLoadObject hands it to the kernel. The payoff: when you trace one PID, events from every other process are discarded in a few instructions and never touch the ring buffer.</aside>
+</section>

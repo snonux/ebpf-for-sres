@@ -1,0 +1,16 @@
+<section id="ior-design" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">Lessons from ior</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Design choices worth copying</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif; font-size:26px; color:#3E4A5E">
+<tr><th style="width:36%; text-align:left; color:#111A2E">Choice</th><th style="width:64%; text-align:left; color:#111A2E">Why</th></tr>
+<tr><td>Tracepoints, not kprobes</td><td>A stable interface that survives kernel upgrades</td></tr>
+<tr><td>A ring buffer map</td><td>One shared buffer for all CPUs, events in order, no extra copy</td></tr>
+<tr><td>Filter in the kernel</td><td>Unwanted events are discarded before they cost anything downstream</td></tr>
+<tr><td>Stateless BPF, smart Go</td><td>Small programs pass the verifier easily; analysis stays flexible</td></tr>
+<tr><td>vmlinux.h and BTF</td><td>One binary runs on any kernel that ships BTF type info</td></tr>
+<tr><td>Generate the handlers</td><td>117 syscalls without copy-paste mistakes</td></tr>
+</table>
+<aside>If you ever build your own eBPF tool, these are good defaults. The ring buffer (BPF_MAP_TYPE_RINGBUF, kernel 5.8 and later) replaced the older per-CPU perf buffer for most use cases. Keeping the BPF side dumb and doing analysis in a normal language is a pattern you will see in many production tools.</aside>
+</section>

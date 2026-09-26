@@ -1,0 +1,18 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-09-26T07:52:43Z"},
+  "title": "eBPF for SREs",
+  "order": ["cover", "question", "what", "lifecycle", "hooks", "maps", "safety", "try", "oneliner-open", "oneliner-count", "oneliner-latency", "libbpf-c", "toolbox", "ior-intro", "ior-arch", "ior-handler", "ior-filter", "ior-codegen", "ior-load", "ior-pairing", "ior-design", "production", "next-steps"],
+  "sections": {
+    "intro": {"description": "Title and framing for an SRE audience", "start": "cover"},
+    "basics": {"description": "What eBPF is, how a program gets into the kernel, and why it is safe", "start": "question"},
+    "handson": {"description": "Tiny examples: bpftrace one-liners, a minimal libbpf program and ready-made tools", "start": "try"},
+    "ior": {"description": "Case study: how ior uses eBPF to trace I/O syscalls", "start": "ior-intro"},
+    "wrap": {"description": "Running eBPF in production and where to go next", "start": "production"}
+  },
+  "faces": {
+    "ibm-plex-sans": {"family": "IBM Plex Sans", "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap"},
+    "jetbrains-mono": {"family": "JetBrains Mono", "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}
+  },
+  "designSystems": []
+}

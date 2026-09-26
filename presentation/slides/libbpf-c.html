@@ -1,0 +1,30 @@
+<section id="libbpf-c" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">Beyond one-liners</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">The same idea in C with libbpf</h2>
+</div>
+<div style="display:flex; gap:40px; align-items:start">
+<div style="background:#16203A; border-radius:16px; padding:28px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#E6E9EF; white-space:nowrap">#include "vmlinux.h"<br>#include &lt;bpf/bpf_helpers.h&gt;<br>struct {<br>&#160;&#160;&#160;&#160;__uint(type, BPF_MAP_TYPE_HASH);<br>&#160;&#160;&#160;&#160;__uint(max_entries, 10240);<br>&#160;&#160;&#160;&#160;__type(key, u32);&#160;&#160;&#160;&#160;<span style="color:#93A3BF">// PID</span><br>&#160;&#160;&#160;&#160;__type(value, u64);&#160;&#160;<span style="color:#93A3BF">// write() calls</span><br>} counts SEC(".maps");<br><span style="color:#F2A65A">SEC("tracepoint/syscalls/sys_enter_write")</span><br>int count_writes(void *ctx) {<br>&#160;&#160;&#160;&#160;u32 pid = bpf_get_current_pid_tgid() &gt;&gt; 32;<br>&#160;&#160;&#160;&#160;u64 one = 1, *n = bpf_map_lookup_elem(&amp;counts, &amp;pid);<br>&#160;&#160;&#160;&#160;if (n) __sync_fetch_and_add(n, 1);<br>&#160;&#160;&#160;&#160;else&#160;&#160;&#160;bpf_map_update_elem(&amp;counts, &amp;pid, &amp;one, BPF_ANY);<br>&#160;&#160;&#160;&#160;return 0;<br>}<br>char LICENSE[] SEC("license") = "GPL";</p>
+</div>
+<div style="flex:1; display:flex; flex-direction:column; gap:24px">
+<div style="display:flex; flex-direction:column; gap:6px">
+<p style="font-size:24px; font-weight:600; color:#111A2E">1. Kernel types, from BTF</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#111A2E">bpftool btf dump file /sys/kernel/btf/vmlinux format c &gt; vmlinux.h</p>
+</div>
+<div style="display:flex; flex-direction:column; gap:6px">
+<p style="font-size:24px; font-weight:600; color:#111A2E">2. Compile to BPF bytecode</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#111A2E">clang -O2 -g -target bpf -c count.bpf.c -o count.bpf.o</p>
+</div>
+<div style="display:flex; flex-direction:column; gap:6px">
+<p style="font-size:24px; font-weight:600; color:#111A2E">3. Load and attach</p>
+<p style="font-size:24px; line-height:1.35">from a small loader: libbpf in C, or libbpfgo in Go as ior does</p>
+</div>
+<div style="display:flex; flex-direction:column; gap:6px">
+<p style="font-size:24px; font-weight:600; color:#111A2E">4. Inspect the map</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.35; color:#111A2E">sudo bpftool map dump name counts</p>
+</div>
+</div>
+</div>
+<aside>This is the bpftrace @[pid] = count() idea written by hand. The struct with SEC(".maps") declares a hash map from PID to a counter. SEC("tracepoint/...") tells the loader where to attach the function. The program looks the PID up, increments atomically if present, inserts 1 otherwise. vmlinux.h is generated from the running kernel's BTF type info, which is what lets one compiled object run on many kernel versions (CO-RE). ior's BPF code follows exactly this structure.</aside>
+</section>

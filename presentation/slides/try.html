@@ -1,0 +1,8 @@
+<section id="try" data-transition="push" style="background:#E8833A; color:#111A2E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:40px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#111A2E">Hands-on</p>
+<h1 style="font-size:96px; font-weight:700; line-height:1.1; color:#111A2E">Try it: bpftrace one-liners</h1>
+<p style="font-size:36px; line-height:1.4; width:1400px">bpftrace is awk for kernel events. Every program has the same shape:</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:44px; background:#111A2E; color:#F3F1EA; padding:24px 40px; border-radius:16px; width:900px">probe /filter/ { action }</p>
+<p style="font-size:30px">Run as root on a recent kernel. Install with your package manager: <b>bpftrace</b>.</p>
+<aside>Switch to a terminal if you can and run these live. bpftrace compiles the script to BPF, loads it, and prints map contents when you press Ctrl-C. The filter is optional. Syntax note: recent bpftrace versions write tracepoint arguments as args.name; older versions use args->name.</aside>
+</section>

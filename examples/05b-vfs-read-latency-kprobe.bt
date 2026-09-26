@@ -1,0 +1,22 @@
+#!/usr/bin/env bpftrace
+// Optional variant of 05: the same latency pattern with a kprobe on the kernel
+// function vfs_read(). Needs a kernel with CONFIG_KPROBES (Rocky/RHEL have it).
+// kprobes hook kernel internals, so they can break across kernel versions.
+// Stores a timestamp per thread on entry, subtracts it on return.
+// Run: sudo ./05b-vfs-read-latency-kprobe.bt   (Ctrl-C prints the histogram)
+kprobe:vfs_read
+{
+    @start[tid] = nsecs;
+}
+
+kretprobe:vfs_read
+/@start[tid]/
+{
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+    delete(@start[tid]);
+}
+
+END
+{
+    clear(@start);
+}

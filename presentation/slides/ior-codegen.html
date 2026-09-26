@@ -1,0 +1,37 @@
+<section id="ior-codegen" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:48px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">ior code generation</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Generated from the kernel, not hand-written</h2>
+</div>
+<div style="display:flex; gap:32px">
+<div style="flex:1; display:flex; flex-direction:column; gap:4px">
+<p style="font-size:96px; font-weight:700; line-height:1.1; color:#A84B14">117</p>
+<p style="font-size:28px">syscalls traced</p>
+</div>
+<div style="flex:1; display:flex; flex-direction:column; gap:4px">
+<p style="font-size:96px; font-weight:700; line-height:1.1; color:#A84B14">234</p>
+<p style="font-size:28px">BPF handlers, one per enter and exit</p>
+</div>
+<div style="flex:1; display:flex; flex-direction:column; gap:4px">
+<p style="font-size:96px; font-weight:700; line-height:1.1; color:#A84B14">9</p>
+<p style="font-size:28px">event struct layouts</p>
+</div>
+</div>
+<div style="display:flex; align-items:center; gap:12px">
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Read</h3>
+<p style="font-size:24px; line-height:1.35">each syscall's format file under /sys/kernel/tracing/events/syscalls</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Classify</h3>
+<p style="font-size:24px; line-height:1.35">by its arguments: fd, filename, pathname, old and new name, return value</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Emit</h3>
+<p style="font-size:24px; line-height:1.35">C handlers, matching Go structs, and the tracepoint list</p>
+</div>
+</div>
+<aside>Writing 234 nearly identical handlers by hand would be a copy-paste bug factory. Instead, mage generate reads the tracepoint format files from the running kernel, classifies each syscall by its argument names (does it take an fd, a filename, a pathname, two names like rename?), and emits the C handlers, Go structs that mirror the C structs byte for byte, and the list of tracepoints to attach. Return values are also classified as read, write or transfer so ior can count bytes. Generator source: internal/generate/.</aside>
+</section>

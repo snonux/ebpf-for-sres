@@ -1,0 +1,17 @@
+<section id="toolbox" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">Ready-made</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Tools worth knowing before your next page</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif; font-size:28px; color:#3E4A5E">
+<tr><th style="width:30%; text-align:left; color:#111A2E">Tool</th><th style="width:70%; text-align:left; color:#111A2E">Answers</th></tr>
+<tr><td>execsnoop</td><td>Which short-lived processes keep spawning?</td></tr>
+<tr><td>opensnoop</td><td>Which files are being opened, and are the opens failing?</td></tr>
+<tr><td>biolatency</td><td>How slow is the disk, as a latency histogram?</td></tr>
+<tr><td>runqlat</td><td>Are threads waiting for a CPU?</td></tr>
+<tr><td>tcplife, tcpretrans</td><td>Which TCP sessions, how long, any retransmits?</td></tr>
+<tr><td>profile</td><td>Where is CPU time spent? Feeds flame graphs.</td></tr>
+</table>
+<p style="position:absolute; left:128px; bottom:64px; width:1664px; font-size:24px; color:#6A7385">From the bcc and bpftrace tool collections, packaged in most distributions. ior is one more tool in this family, focused on file I/O.</p>
+<aside>You do not have to write BPF to benefit from it. These tools ship with bcc (package names like bcc-tools or bpfcc-tools) and many also exist as bpftrace scripts. Brendan Gregg's 60-second checklist with these tools is a great on-call starting point.</aside>
+</section>

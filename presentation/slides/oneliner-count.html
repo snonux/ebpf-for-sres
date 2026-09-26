@@ -1,0 +1,16 @@
+<section id="oneliner-count" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:32px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">One-liners 2 and 3</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Counting and histograms, in the kernel</h2>
+</div>
+<p style="font-size:28px; font-weight:600; color:#111A2E">Syscalls per process, printed when you press Ctrl-C</p>
+<div style="background:#16203A; border-radius:16px; padding:28px 40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.45; color:#E6E9EF; white-space:nowrap"><span style="color:#93A3BF">$</span> sudo bpftrace -e '<span style="color:#F2A65A">tracepoint:raw_syscalls:sys_enter</span> { @[comm] = count(); }'</p>
+</div>
+<p style="font-size:28px; font-weight:600; color:#111A2E">How many bytes does each successful read() return?</p>
+<div style="background:#16203A; border-radius:16px; padding:28px 40px; display:flex; flex-direction:column; gap:20px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.45; color:#E6E9EF; white-space:nowrap"><span style="color:#93A3BF">$</span> sudo bpftrace -e '<span style="color:#F2A65A">tracepoint:syscalls:sys_exit_read</span> /args.ret &gt; 0/ { @bytes = hist(args.ret); }'</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; color:#93A3BF; white-space:nowrap">@bytes:<br>[16, 32)&#160;&#160;&#160;&#160;&#160;&#160;87 |@@@@@@&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|<br>[512, 1K)&#160;&#160;&#160;&#160;402 |@@@@@@@@@@@@@@@@@@@@@@@@@@|<br>[4K, 8K)&#160;&#160;&#160;&#160;&#160;213 |@@@@@@@@@@@@@@&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;(illustrative)</p>
+</div>
+<aside>Both of these aggregate inside the kernel. @[comm] = count() is a hash map keyed by process name; hist() is a log2 histogram map. Nothing is printed per event, which is why these are cheap even on busy hosts. The /args.ret > 0/ part is a filter: only successful reads that returned data are counted. Lots of tiny reads in the histogram is a classic sign of missing buffering.</aside>
+</section>

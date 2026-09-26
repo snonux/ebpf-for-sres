@@ -1,0 +1,39 @@
+<section id="ior-arch" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">ior architecture</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">One event's journey</h2>
+</div>
+<p style="position:absolute; left:128px; top:262px; width:900px; font-size:24px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#6A7385">Kernel · C compiled to BPF</p>
+<div style="position:absolute; left:128px; top:310px; width:480px; height:200px; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">Tracepoints</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">sys_enter_* and sys_exit_* for 117 syscalls</p>
+</div>
+<div style="position:absolute; left:688px; top:310px; width:480px; height:200px; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">BPF handler</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">filter by PID and TID, fill an event struct, timestamp it</p>
+</div>
+<div style="position:absolute; left:1248px; top:310px; width:544px; height:200px; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border:3px solid #F2A65A; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">Ring buffer: event_map</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">reserve, fill, submit; size set with the -mapSize flag</p>
+</div>
+<p style="position:absolute; left:128px; top:556px; width:900px; font-size:24px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#6A7385">User space · Go</p>
+<div style="position:absolute; left:1248px; top:610px; width:544px; height:200px; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">libbpfgo</h3>
+<p style="font-size:24px; line-height:1.35">polls the ring buffer and pushes raw bytes into a Go channel</p>
+</div>
+<div style="position:absolute; left:688px; top:610px; width:480px; height:200px; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Event loop</h3>
+<p style="font-size:24px; line-height:1.35">decode by event type, pair enter and exit per thread</p>
+</div>
+<div style="position:absolute; left:128px; top:610px; width:480px; height:200px; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Outputs</h3>
+<p style="font-size:24px; line-height:1.35">stats engine, TUI dashboard, flame graphs, Parquet</p>
+</div>
+<x-connector x1="608" y1="410" x2="688" y2="410" head="end" style="color:#A84B14; border-width:3px"></x-connector>
+<x-connector x1="1168" y1="410" x2="1248" y2="410" head="end" style="color:#A84B14; border-width:3px"></x-connector>
+<x-connector x1="1520" y1="510" x2="1520" y2="610" head="end" style="color:#A84B14; border-width:3px"></x-connector>
+<x-connector x1="1248" y1="710" x2="1168" y2="710" head="end" style="color:#A84B14; border-width:3px"></x-connector>
+<x-connector x1="688" y1="710" x2="608" y2="710" head="end" style="color:#A84B14; border-width:3px"></x-connector>
+<p style="position:absolute; left:128px; bottom:64px; width:1664px; font-size:24px; color:#6A7385">Source: internal/c/ior.bpf.c, internal/ior_bpfsetup.go, internal/eventloop_runtime.go</p>
+<aside>Follow one openat call. The kernel fires sys_enter_openat; ior's generated BPF handler checks the PID/TID filter, reserves space in the ring buffer, writes an event struct with a timestamp, the filename and the process name, and submits it. libbpfgo polls the ring buffer and hands raw bytes to a Go channel. The event loop reads the first field to know the event type, decodes it, and waits for the matching sys_exit_openat on the same thread to build a pair with a duration. The pairs feed the stats engine, the TUI tabs, flame graphs and optional Parquet recording.</aside>
+</section>

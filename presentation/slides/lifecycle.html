@@ -1,0 +1,70 @@
+<section id="lifecycle" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">How it works</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">From source code to a running probe</h2>
+</div>
+<div style="display:flex; flex-direction:column; gap:16px">
+<p style="font-size:24px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#6A7385">Once, at load time</p>
+<div style="display:flex; align-items:center; gap:12px">
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Write</h3>
+<p style="font-size:24px; line-height:1.35">bpftrace script or C code</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Compile</h3>
+<p style="font-size:24px; line-height:1.35">clang turns it into BPF bytecode</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Load</h3>
+<p style="font-size:24px; line-height:1.35">handed over with the bpf() syscall</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">Verify</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">proven safe, or rejected</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">JIT and attach</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">native code hooked to an event</p>
+</div>
+</div>
+</div>
+<div style="display:flex; flex-direction:column; gap:16px">
+<p style="font-size:24px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#6A7385">Every time the event fires</p>
+<div style="display:flex; align-items:center; gap:12px">
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">Event</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">a syscall, a function call, a packet</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">Program runs</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">reads the context, filters early</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#111A2E; padding:24px 28px; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#F3F1EA">Map or ring buffer</h3>
+<p style="font-size:24px; line-height:1.35; color:#C9D2E3">counters, histograms or raw events</p>
+</div>
+<x-connector style="width:48px; color:#A84B14; border-width:3px"></x-connector>
+<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:#FDFCF8; padding:24px 28px; border:1px solid #E2DED3; border-radius:12px">
+<h3 style="font-size:30px; font-weight:600; color:#111A2E">Your tool</h3>
+<p style="font-size:24px; line-height:1.35">reads the results and shows them</p>
+</div>
+</div>
+</div>
+<div style="display:flex; gap:40px; align-items:center">
+<div style="display:flex; gap:12px; align-items:center">
+<div style="width:32px; height:32px; background:#FDFCF8; border:1px solid #9AA3B2; border-radius:6px"></div>
+<p style="font-size:24px">User space</p>
+</div>
+<div style="display:flex; gap:12px; align-items:center">
+<div style="width:32px; height:32px; background:#111A2E; border-radius:6px"></div>
+<p style="font-size:24px">Kernel</p>
+</div>
+</div>
+<aside>Two phases. At load time, user space compiles and loads the program and the kernel's verifier decides whether it is allowed to run; if it is, the JIT turns it into native code and it is attached to a hook. After that, every time the event fires, the program runs inside the kernel, writes into a map or ring buffer, and your user-space tool reads from there. Light boxes are user space, dark boxes are the kernel.</aside>
+</section>

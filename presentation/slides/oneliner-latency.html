@@ -1,0 +1,20 @@
+<section id="oneliner-latency" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">One-liner 4</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Latency: time from entry to return</h2>
+</div>
+<div style="background:#16203A; border-radius:16px; padding:32px 40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:26px; line-height:1.45; color:#E6E9EF; white-space:nowrap"><span style="color:#93A3BF">$</span> sudo bpftrace -e '<br><span style="color:#F2A65A">tracepoint:syscalls:sys_enter_read</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{ @start[tid] = nsecs; }<br><span style="color:#F2A65A">tracepoint:syscalls:sys_exit_read</span> /@start[tid]/ {<br>&#160;&#160;&#160;&#160;@usecs = hist((nsecs - @start[tid]) / 1000);<br>&#160;&#160;&#160;&#160;delete(@start[tid]);<br>}'</p>
+</div>
+<div style="display:flex; gap:32px">
+<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FDFCF8; padding:32px 36px; border:3px solid #A84B14; border-radius:16px">
+<h3 style="font-size:32px; font-weight:600; color:#111A2E">The pattern to remember</h3>
+<p style="font-size:28px; line-height:1.4">On entry, store a timestamp keyed by thread ID. On return, subtract it. ior does this for 117 syscalls, pairing the events in Go.</p>
+</div>
+<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FDFCF8; padding:32px 36px; border:1px solid #E2DED3; border-radius:16px">
+<h3 style="font-size:32px; font-weight:600; color:#111A2E">Or use a kprobe</h3>
+<p style="font-size:28px; line-height:1.4">kprobe:vfs_read and kretprobe:vfs_read time the kernel function instead, but kprobes can break between kernel versions.</p>
+</div>
+</div>
+<aside>This is the core pattern of latency tracing. The @start map holds one timestamp per thread; the exit tracepoint computes the delta and feeds a histogram in microseconds, then deletes the entry so the map does not grow. Keep this pattern in mind: it is exactly what ior does, with the same syscall tracepoints, except ior does the pairing in user space rather than in a BPF map. The kprobe variant is in the examples as 05b-vfs-read-latency-kprobe.bt.</aside>
+</section>

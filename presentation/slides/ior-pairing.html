@@ -1,0 +1,26 @@
+<section id="ior-pairing" data-transition="fade" style="background:#F6F4EE; color:#3E4A5E; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A84B14">ior in user space</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#111A2E">Turning two events into one measurement</h2>
+</div>
+<p style="position:absolute; left:128px; top:300px; width:600px; font-size:24px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#6A7385">One thread, over time</p>
+<div style="position:absolute; left:228px; top:420px; width:520px; height:96px; display:flex; align-items:center; justify-content:center; background:#111A2E; border-radius:12px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:28px; color:#F3F1EA">openat()</p>
+</div>
+<div style="position:absolute; left:1068px; top:420px; width:560px; height:96px; display:flex; align-items:center; justify-content:center; background:#111A2E; border-radius:12px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:28px; color:#F3F1EA">read()</p>
+</div>
+<hr style="position:absolute; left:128px; top:560px; width:1664px; height:0px; border-top:2px solid #9AA3B2">
+<p style="position:absolute; left:148px; top:572px; width:160px; font-size:24px; color:#6A7385">enter</p>
+<p style="position:absolute; left:688px; top:572px; width:160px; font-size:24px; color:#6A7385">exit</p>
+<p style="position:absolute; left:1008px; top:572px; width:160px; font-size:24px; color:#6A7385">enter</p>
+<p style="position:absolute; left:1568px; top:572px; width:160px; font-size:24px; color:#6A7385">exit</p>
+<p style="position:absolute; left:228px; top:364px; width:520px; font-size:24px; font-weight:600; color:#111A2E; text-align:center">Duration = exit − enter</p>
+<p style="position:absolute; left:760px; top:444px; width:296px; font-size:24px; font-weight:600; color:#A84B14; text-align:center">Gap to previous</p>
+<div style="position:absolute; left:128px; top:660px; width:1664px; display:flex; gap:32px">
+<p style="flex:1; font-size:28px; line-height:1.4">Enter and exit events are matched <b>per thread ID</b>.</p>
+<p style="flex:1; font-size:28px; line-height:1.4">The gap shows time a thread spent <b>between</b> syscalls.</p>
+<p style="flex:1; font-size:28px; line-height:1.4">Read and write return values become <b>byte counts</b>.</p>
+</div>
+<aside>From internal/event/pair.go. The kernel side stays tiny and stateless: it never tracks in-flight syscalls. Go keeps the last enter event per thread, and when the exit arrives it builds a Pair with Duration (exit minus enter on the same thread) and DurationToPrev (the gap since that thread's previous syscall ended). Timestamps come from bpf_ktime_get_boot_ns; ior guards against cross-CPU clock skew by clamping negative deltas to zero. Compare this with the bpftrace latency one-liner, which did the pairing in a BPF map.</aside>
+</section>

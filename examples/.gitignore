@@ -1,0 +1,7 @@
+run-all.log
+out.tmp
+compat.bt
+libbpf.tmp
+libbpf/vmlinux.h
+libbpf/*.o
+libbpf/count_writes
