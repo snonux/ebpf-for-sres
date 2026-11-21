@@ -34,8 +34,14 @@ large terminal font, two panes side by side.
 cd examples
 sudo ./01-opens-per-process/opens.bt              # 10 s, Ctrl-C: counts per process
 sudo ./02-opensnoop/opensnoop.bt                 # live events, Ctrl-C
-sudo bpftrace -d all ./01-opens-per-process/opens.bt | less   # parser, semantic pass, LLVM IR
+sudo bpftrace -d all ./01-opens-per-process/opens.bt 2>&1 | less   # parser, semantic pass, LLVM IR (q, then Ctrl-C)
 ```
+
+Rocky 9.9 ships bpftrace 0.26, which prints "Kernel version (5.14.0-...) is
+lower than the minimum supported kernel version (5.15.0)" on every start, and
+type-check warnings for the latency scripts (05, 06, 07). Everything works
+(tested on 5.14.0-741.22.1.el9_9). For a clean screen on stage add
+`--no-warnings`: `sudo bpftrace --no-warnings ./02-opensnoop/opensnoop.bt`.
 
 The point of the last command: bpftrace compiles on the host every time
 (slide "bpftrace is a compiler that runs on your host"). The Go examples that

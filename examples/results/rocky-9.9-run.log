@@ -1,0 +1,1424 @@
+Kernel: 5.14.0-741.22.1.el9_9.x86_64   "Rocky Linux 9.9 (Blue Onyx)"
+bpftrace: bpftrace v0.26.0
+go: go version go1.27.3 (Red Hat 1.27.3-1.el9_9) linux/amd64
+
+PASS  01-opens-per-process/opens.bt
+PASS  01-opens-per-process (Go, libbpfgo)
+PASS  02-opensnoop/opensnoop.bt
+PASS  02-opensnoop (Go, libbpfgo)
+PASS  03-syscalls-per-process/syscalls.bt
+PASS  03-syscalls-per-process (Go, libbpfgo)
+PASS  04-read-size-hist/readsize.bt
+PASS  04-read-size-hist (Go, libbpfgo)
+PASS  05-read-latency/readlat.bt
+PASS  05-read-latency (Go, libbpfgo)
+PASS  06-vfs-read-latency-kprobe/vfsreadlat.bt
+PASS  06-vfs-read-latency-kprobe (Go, libbpfgo)
+PASS  07-dns-latency-uprobe/dnslat.bt
+PASS  07-dns-latency-uprobe (Go, libbpfgo)
+PASS  10-overhead-drops/drops.bt
+PASS  10-overhead-drops (Go, libbpfgo)
+PASS  11-count-writes (Go, libbpfgo)
+PASS  12-execsnoop-core/execsnoop.bt
+PASS  12-execsnoop-core (Go, libbpfgo)
+PASS  13-k8s-store-iops (Go, libbpfgo)
+PASS  08-list-probes/list-probes.sh
+PASS  09-bcc-tools/bcc-tools.sh (execsnoop opensnoop biolatency runqlat tcplife tcpretrans profile)
+PASS  10-overhead-drops/overhead.sh
+PASS  11-count-writes (C, libbpf: build, load, attach, read map)
+
+24 passed, 0 failed, 0 skipped. Full output: /home/rocky/ebpf-for-sres/examples/run-all.log
+
+################ run-all.log
+===== 01-opens-per-process/opens.bt
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+
+
+@[sshd]: 1
+@[locale]: 2
+@[tr]: 4
+@[sed]: 6
+@[irqbalance]: 6
+@[in:imjournal]: 7
+@[xargs]: 8
+@[find]: 12
+@[grepconf.sh]: 15
+@[unix_chkpwd]: 15
+@[grep]: 18
+@[tclsh]: 26
+@[readlink]: 30
+@[systemd-logind]: 59
+@[basename]: 60
+@[systemd-journal]: 68
+@[systemd]: 79
+@[ps]: 352
+@[sshd-session]: 370
+@[bash]: 557
+@[sleep]: 690
+@[ls]: 1288
+@[head]: 4292
+@[getent]: 4522
+@[cat]: 7175
+===== 01-opens-per-process: mage test
+go: downloading github.com/aquasecurity/libbpfgo v0.9.2-libbpf-1.5.1
+Counting openat() per process name. Ctrl-C to stop.
+@[bash]: 58
+@[sleep]: 60
+@[ls]: 112
+@[head]: 518
+@[getent]: 546
+@[cat]: 888
+PASS go/opens
+===== 02-opensnoop/opensnoop.bt
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+getent           /etc/ld.so.cache
+getent           /lib64/libc.so.6
+getent           
+getent           /usr/share/locale/locale.alias
+getent           /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
+getent           /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+getent           /usr/lib64/gconv/gconv-modules.cache
+getent           /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
+getent           /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+getent           /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
+getent           /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+getent           /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
+getent           /usr/lib/locale/en_US.utf8/LC_ADDRESS
+getent           /usr/lib/locale/en_US.UTF-8/LC_NAME
+getent           /usr/lib/locale/en_US.utf8/LC_NAME
+getent           /usr/lib/locale/en_US.UTF-8/LC_PAPER
+getent           /usr/lib/locale/en_US.utf8/LC_PAPER
+getent           /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
+getent           /usr/lib/locale/en_US.utf8/LC_MESSAGES
+getent           /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+getent           /usr/lib/locale/en_US.UTF-8/LC_MONETARY
+getent           /usr/lib/locale/en_US.utf8/LC_MONETARY
+getent           /usr/lib/locale/en_US.UTF-8/LC_COLLATE
+getent           /usr/lib/locale/en_US.utf8/LC_COLLATE
+getent           /usr/lib/locale/en_US.UTF-8/LC_TIME
+getent           /usr/lib/locale/en_US.utf8/LC_TIME
+getent           /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
+getent           /usr/lib/locale/en_US.utf8/LC_NUMERIC
+getent           /usr/lib/locale/en_US.UTF-8/LC_CTYPE
+getent           /usr/lib/locale/en_US.utf8/LC_CTYPE
+getent           /etc/nsswitch.conf
+getent           /etc/host.conf
+getent           /etc/resolv.conf
+getent           /etc/hosts
+getent           /etc/ld.so.cache
+getent           /lib64/libidn2.so.0
+getent           /lib64/libunistring.so.2
+getent           /usr/lib64/charset.alias
+===== 02-opensnoop: mage test
+47465   head             /usr/share/locale/en_US.UTF-8/LC_MESSAGES/coreutils.mo
+47465   head             /usr/share/locale/en_US.utf8/LC_MESSAGES/coreutils.mo
+47465   head             /usr/share/locale/en_US/LC_MESSAGES/coreutils.mo
+47465   head             /usr/share/locale/en.UTF-8/LC_MESSAGES/coreutils.mo
+47465   head             /usr/share/locale/en.utf8/LC_MESSAGES/coreutils.mo
+47465   head             /usr/share/locale/en/LC_MESSAGES/coreutils.mo
+47465   head             /dev/urandom
+47466   bash             /dev/null
+47466   cat              /etc/ld.so.cache
+47466   cat              /lib64/libc.so.6
+47466   cat              
+47466   cat              /usr/share/locale/locale.alias
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
+47466   cat              /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+47466   cat              /usr/lib64/gconv/gconv-modules.cache
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
+47466   cat              /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
+47466   cat              /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
+47466   cat              /usr/lib/locale/en_US.utf8/LC_ADDRESS
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_NAME
+47466   cat              /usr/lib/locale/en_US.utf8/LC_NAME
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_PAPER
+47466   cat              /usr/lib/locale/en_US.utf8/LC_PAPER
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
+47466   cat              /usr/lib/locale/en_US.utf8/LC_MESSAGES
+47466   cat              /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_MONETARY
+47466   cat              /usr/lib/locale/en_US.utf8/LC_MONETARY
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_COLLATE
+47466   cat              /usr/lib/locale/en_US.utf8/LC_COLLATE
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_TIME
+47466   cat              /usr/lib/locale/en_US.utf8/LC_TIME
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
+47466   cat              /usr/lib/locale/en_US.utf8/LC_NUMERIC
+47466   cat              /usr/lib/locale/en_US.UTF-8/LC_CTYPE
+47466   cat              /usr/lib/locale/en_US.utf8/LC_CTYPE
+47466   cat              /tmp/workload.zNezc1/file2
+PASS go/opensnoop
+===== 03-syscalls-per-process/syscalls.bt
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+
+
+@[rpcbind]: 1
+@[gssproxy]: 4
+@[crond]: 4
+@[timeout]: 9
+@[systemd-udevd]: 18
+@[rs:main Q:Reg]: 29
+@[locale]: 38
+@[gmain]: 64
+@[sed]: 75
+@[sshd]: 76
+@[sedispatch]: 82
+@[tr]: 83
+@[gdbus]: 89
+@[chronyd]: 109
+@[readlink]: 114
+@[irqbalance]: 142
+@[xargs]: 151
+@[find]: 162
+@[unix_chkpwd]: 166
+@[in:imjournal]: 205
+@[basename]: 226
+@[auditd]: 329
+@[bpftrace]: 343
+@[grep]: 366
+@[tclsh]: 468
+@[grepconf.sh]: 510
+@[systemd-journal]: 567
+@[dbus-broker]: 723
+@[systemd-logind]: 734
+@[NetworkManager]: 840
+@[ps]: 1311
+@[systemd]: 2040
+@[sleep]: 2576
+@[sshd-session]: 2987
+@[ls]: 6256
+@[head]: 17017
+===== 03-syscalls-per-process: mage test
+Counting syscalls per process name. Ctrl-C to stop.
+@[gmain]: 8
+@[in:imjournal]: 12
+@[b205dfe92e8df40]: 14
+@[sedispatch]: 15
+@[auditd]: 16
+@[syscalls]: 203
+@[sleep]: 224
+@[ls]: 544
+@[head]: 2002
+@[getent]: 2660
+@[bash]: 2840
+@[cat]: 3630
+PASS go/syscalls
+===== 04-read-size-hist/readsize.bt
+04-read-size-hist/readsize.bt:5:2-14: WARNING: Addrspace mismatch
+/args.ret > 0/
+ ~~~~~~~~~~~~
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+
+
+@bytes:
+[2, 4)                 2 |                                                    |
+[4, 8)                 0 |                                                    |
+[8, 16)              125 |@@@@@@                                              |
+[16, 32)               3 |                                                    |
+[32, 64)             144 |@@@@@@@                                             |
+[64, 128)             24 |@                                                   |
+[128, 256)           119 |@@@@@@                                              |
+[256, 512)             4 |                                                    |
+[512, 1K)            996 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1K, 2K)              43 |@@                                                  |
+[2K, 4K)             665 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  |
+[4K, 8K)               0 |                                                    |
+[8K, 16K)            944 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   |
+[16K, 32K)             0 |                                                    |
+[32K, 64K)             0 |                                                    |
+[64K, 128K)          118 |@@@@@@                                              |
+
+===== 04-read-size-hist: mage test
+Histogram of read() sizes. Ctrl-C to print.
+@bytes:
+[1, 2)                  1 |                                                  |
+[2, 4)                  4 |@                                                 |
+[4, 8)                  8 |@@                                                |
+[8, 16)                43 |@@@@@@@@@@@@                                      |
+[16, 32)                7 |@@                                                |
+[32, 64)               41 |@@@@@@@@@@@                                       |
+[64, 128)               8 |@@                                                |
+[128, 256)            158 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     |
+[256, 512)             19 |@@@@@                                             |
+[512, 1K)             160 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     |
+[1K, 2K)              165 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   |
+[2K, 4K)              102 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                     |
+[4K, 8K)              175 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             120 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                |
+[16K, 32K)              0 |                                                  |
+[32K, 64K)              0 |                                                  |
+[64K, 128K)            15 |@@@@                                              |
+PASS go/readsize
+===== 05-read-latency/readlat.bt
+05-read-latency/readlat.bt:14:20-47: WARNING: signed operands for '/' can lead to undefined behavior (cast to unsigned to silence warning)
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+05-read-latency/readlat.bt:14:20-47: WARNING: signed operands for '/' can lead to undefined behavior (cast to unsigned to silence warning)
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+05-read-latency/readlat.bt:14:20-25: WARNING: Expression of type: uint64 being cast to type: int64. This may cause unexpected results. Use an explicit cast to suppress this warning.
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                   ~~~~~
+05-read-latency/readlat.bt:14:28-39: WARNING: Expression of type: uint64 being cast to type: int64. This may cause unexpected results. Use an explicit cast to suppress this warning.
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                           ~~~~~~~~~~~
+05-read-latency/readlat.bt:15:5-24: WARNING: Return value discarded.
+    delete(@start[tid]);
+    ~~~~~~~~~~~~~~~~~~~
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 3 probes
+
+
+@usecs:
+[4, 8)               109 |@@@                                                 |
+[8, 16)              572 |@@@@@@@@@@@@@@@@@@@@                                |
+[16, 32)             740 |@@@@@@@@@@@@@@@@@@@@@@@@@@                          |
+[32, 64)            1455 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[64, 128)            967 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  |
+[128, 256)           329 |@@@@@@@@@@@                                         |
+[256, 512)           104 |@@@                                                 |
+[512, 1K)            106 |@@@                                                 |
+[1K, 2K)              14 |                                                    |
+[2K, 4K)               4 |                                                    |
+[4K, 8K)               2 |                                                    |
+
+===== 05-read-latency: mage test
+read() latency in microseconds. Ctrl-C to print.
+@usecs:
+[4, 8)                 19 |@@@@@                                             |
+[8, 16)                70 |@@@@@@@@@@@@@@@@@@@@                              |
+[16, 32)              112 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 |
+[32, 64)              169 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[64, 128)             132 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           |
+[128, 256)             42 |@@@@@@@@@@@@                                      |
+[256, 512)              9 |@@                                                |
+[512, 1K)              12 |@@@                                               |
+PASS go/readlat
+===== 06-vfs-read-latency-kprobe/vfsreadlat.bt
+06-vfs-read-latency-kprobe/vfsreadlat.bt:15:20-47: WARNING: signed operands for '/' can lead to undefined behavior (cast to unsigned to silence warning)
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+06-vfs-read-latency-kprobe/vfsreadlat.bt:15:20-47: WARNING: signed operands for '/' can lead to undefined behavior (cast to unsigned to silence warning)
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+06-vfs-read-latency-kprobe/vfsreadlat.bt:15:20-25: WARNING: Expression of type: uint64 being cast to type: int64. This may cause unexpected results. Use an explicit cast to suppress this warning.
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                   ~~~~~
+06-vfs-read-latency-kprobe/vfsreadlat.bt:15:28-39: WARNING: Expression of type: uint64 being cast to type: int64. This may cause unexpected results. Use an explicit cast to suppress this warning.
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+                           ~~~~~~~~~~~
+06-vfs-read-latency-kprobe/vfsreadlat.bt:16:5-24: WARNING: Return value discarded.
+    delete(@start[tid]);
+    ~~~~~~~~~~~~~~~~~~~
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 2 probes
+
+
+@usecs:
+[2, 4)               109 |@@@@                                                |
+[4, 8)               887 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   |
+[8, 16)             1232 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      |
+[16, 32)             811 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                      |
+[32, 64)            1367 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[64, 128)            919 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  |
+[128, 256)           282 |@@@@@@@@@@                                          |
+[256, 512)           106 |@@@@                                                |
+[512, 1K)            102 |@@@                                                 |
+[1K, 2K)              14 |                                                    |
+[2K, 4K)               8 |                                                    |
+[4K, 8K)               4 |                                                    |
+
+===== 06-vfs-read-latency-kprobe: mage test
+vfs_read() latency in microseconds (kprobe). Ctrl-C to print.
+@usecs:
+[2, 4)                 19 |@@@@                                              |
+[4, 8)                119 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                     |
+[8, 16)               201 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[16, 32)              116 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@                      |
+[32, 64)              196 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  |
+[64, 128)             103 |@@@@@@@@@@@@@@@@@@@@@@@@@                         |
+[128, 256)             40 |@@@@@@@@@                                         |
+[256, 512)             10 |@@                                                |
+[512, 1K)              13 |@@@                                               |
+[1K, 2K)                2 |                                                  |
+[2K, 4K)                3 |                                                  |
+PASS go/vfsreadlat
+===== 07-dns-latency-uprobe/dnslat.bt
+07-dns-latency-uprobe/dnslat.bt:16:13-40: WARNING: signed operands for '/' can lead to undefined behavior (cast to unsigned to silence warning)
+           (nsecs - @start[tid]) / 1000, retval, str(@host[tid]));
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+07-dns-latency-uprobe/dnslat.bt:16:13-40: WARNING: signed operands for '/' can lead to undefined behavior (cast to unsigned to silence warning)
+           (nsecs - @start[tid]) / 1000, retval, str(@host[tid]));
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+07-dns-latency-uprobe/dnslat.bt:16:13-18: WARNING: Expression of type: uint64 being cast to type: int64. This may cause unexpected results. Use an explicit cast to suppress this warning.
+           (nsecs - @start[tid]) / 1000, retval, str(@host[tid]));
+            ~~~~~
+07-dns-latency-uprobe/dnslat.bt:16:21-32: WARNING: Expression of type: uint64 being cast to type: int64. This may cause unexpected results. Use an explicit cast to suppress this warning.
+           (nsecs - @start[tid]) / 1000, retval, str(@host[tid]));
+                    ~~~~~~~~~~~
+07-dns-latency-uprobe/dnslat.bt:17:5-25: WARNING: Return value discarded.
+    delete(@start[tid]);
+    ~~~~~~~~~~~~~~~~~~~~
+07-dns-latency-uprobe/dnslat.bt:18:5-23: WARNING: Return value discarded.
+    delete(@host[tid]);
+    ~~~~~~~~~~~~~~~~~~
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 3 probes
+getent           51606      31583 us  ret=0  localhost
+getent           51610      40956 us  ret=0  localhost
+getent           51614      22896 us  ret=0  localhost
+getent           51620      19336 us  ret=0  localhost
+getent           51624      26655 us  ret=0  localhost
+getent           51628      75073 us  ret=0  localhost
+getent           51632      21910 us  ret=0  localhost
+getent           51636      26858 us  ret=0  localhost
+getent           51642      22709 us  ret=0  localhost
+getent           51646      22004 us  ret=0  localhost
+getent           51650      20094 us  ret=0  localhost
+getent           51654      20423 us  ret=0  localhost
+getent           51658      21015 us  ret=0  localhost
+getent           51664      21258 us  ret=0  localhost
+getent           51668      20822 us  ret=0  localhost
+getent           51672      25134 us  ret=0  localhost
+getent           51676      18181 us  ret=0  localhost
+getent           51680      17679 us  ret=0  localhost
+getent           51686      30184 us  ret=0  localhost
+getent           51690      27412 us  ret=0  localhost
+===== 07-dns-latency-uprobe: mage test
+COMM             PID        LATENCY  RET  HOST
+getent           52310     35321 us    0  localhost
+getent           52316     18234 us    0  localhost
+getent           52320     19404 us    0  localhost
+getent           52324     24471 us    0  localhost
+getent           52328     21989 us    0  localhost
+getent           52334     22622 us    0  localhost
+getent           52338     25822 us    0  localhost
+getent           52343     18978 us    0  localhost
+getent           52347     18427 us    0  localhost
+getent           52351     20045 us    0  localhost
+getent           52357     21334 us    0  localhost
+getent           52361     24878 us    0  localhost
+getent           52365     27036 us    0  localhost
+getent           52369     20831 us    0  localhost
+getent           52373     24069 us    0  localhost
+PASS go/dnslat
+===== 10-overhead-drops/drops.bt
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+52457 bpftrace 16
+52445 bash 14
+52445 bash 14
+52445 bash 14
+52445 bash 14
+52445 bash 13
+52445 bash 13
+735 auditd 228
+52445 bash 61
+735 auditd 45
+735 auditd 1
+52547 bash 273
+735 auditd 202
+52547 bash 39
+735 auditd 45
+735 auditd 228
+735 auditd 270
+52547 bash 3
+52547 bash 14
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+52547 bash 13
+===== 10-overhead-drops: mage test
+received      385   dropped     7294 events/s
+received      433   dropped     8385 events/s
+received      420   dropped     8338 events/s
+PASS go/drops
+===== 11-count-writes: mage test
+53490    ?                1
+53507    ?                1
+53480    ?                1
+53497    ?                1
+53486    ?                1
+53471    ?                1
+735      auditd           12
+53472    ?                1
+53495    ?                1
+53485    ?                1
+53470    ?                15
+53524    ?                1
+53510    ?                15
+53482    ?                15
+53500    ?                15
+53474    ?                15
+53491    ?                1
+53469    ?                1
+53516    ?                1
+53498    ?                1
+53492    ?                15
+53466    ?                15
+53504    ?                15
+53511    ?                1
+53479    ?                1
+53467    ?                1
+53468    ?                1
+53520    ?                1
+53514    ?                15
+53484    ?                1
+53513    ?                1
+53503    ?                1
+53522    ?                15
+53493    ?                1
+53481    ?                1
+53499    ?                1
+53475    ?                1
+53515    ?                1
+53488    ?                15
+PASS go/count_writes
+===== 12-execsnoop-core/execsnoop.bt
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+53720   53580   cat              /bin/cat
+53721   53580   cat              /bin/cat
+53722   53580   getent           /bin/getent
+53723   53580   head             /bin/head
+53724   53580   cat              /bin/cat
+53725   53580   cat              /bin/cat
+53726   53580   getent           /bin/getent
+53727   53580   head             /bin/head
+53728   53580   cat              /bin/cat
+53729   53580   cat              /bin/cat
+53730   53580   getent           /bin/getent
+53731   53580   head             /bin/head
+53732   53580   cat              /bin/cat
+53733   53580   cat              /bin/cat
+53734   53580   getent           /bin/getent
+53735   53580   ls               /bin/ls
+53736   53580   sleep            /bin/sleep
+53737   53580   head             /bin/head
+53738   53580   cat              /bin/cat
+53739   53580   cat              /bin/cat
+53740   53580   getent           /bin/getent
+53741   53580   head             /bin/head
+53742   53580   cat              /bin/cat
+53743   53580   cat              /bin/cat
+53744   53580   getent           /bin/getent
+53745   53580   head             /bin/head
+53746   53580   cat              /bin/cat
+53747   53580   cat              /bin/cat
+53748   53580   getent           /bin/getent
+53749   53580   head             /bin/head
+53750   53580   cat              /bin/cat
+53751   53580   cat              /bin/cat
+53752   53580   getent           /bin/getent
+53753   53580   head             /bin/head
+53754   53580   cat              /bin/cat
+53755   53580   cat              /bin/cat
+53756   53580   getent           /bin/getent
+53757   53580   ls               /bin/ls
+===== 12-execsnoop-core: mage test
+54370   54317   0      getent           /bin/getent
+54373   54371   1000   xargs            /usr/bin/xargs
+54372   54371   1000   find             /usr/bin/find
+54374   54371   1000   tr               /usr/bin/tr
+54375   54373   1000   cat              /usr/bin/cat
+54376   54317   0      head             /bin/head
+54378   54377   1000   locale           /usr/bin/locale
+54379   54317   0      cat              /bin/cat
+54380   54348   1000   sed              /usr/bin/sed
+54381   54317   0      cat              /bin/cat
+54382   54317   0      getent           /bin/getent
+54388   54387   1000   tclsh            /usr/bin/tclsh
+54389   54317   0      head             /bin/head
+54390   54317   0      cat              /bin/cat
+54391   54317   0      cat              /bin/cat
+54392   54317   0      getent           /bin/getent
+54393   54317   0      head             /bin/head
+54394   54317   0      cat              /bin/cat
+54395   54317   0      cat              /bin/cat
+54397   54396   1000   ps               /bin/ps
+54398   54317   0      getent           /bin/getent
+54399   54317   0      head             /bin/head
+54396   54348   1000   basename         /bin/basename
+54400   54317   0      cat              /bin/cat
+54402   54401   1000   readlink         /usr/bin/readlink
+54403   54317   0      cat              /bin/cat
+54401   54348   1000   basename         /usr/bin/basename
+54404   54317   0      getent           /bin/getent
+54348   54346   1000   grep             /usr/bin/grep
+54405   54317   0      ls               /bin/ls
+54406   54317   0      sleep            /bin/sleep
+54408   54317   0      head             /bin/head
+54409   54317   0      cat              /bin/cat
+54410   54317   0      cat              /bin/cat
+54411   54317   0      getent           /bin/getent
+54412   54317   0      head             /bin/head
+54413   54317   0      cat              /bin/cat
+54414   54317   0      cat              /bin/cat
+54415   54317   0      getent           /bin/getent
+PASS go/execsnoop
+===== 13-k8s-store-iops: mage test
+tracing /tmp/ebpf-store-test (dev 0:46) mntns=4026531841, every 1s. Ctrl-C to stop.
+
+17:25:10     PID COMM             OP         IOPS     MiB/s    AVG_us    MAX_us   ERR
+               - head             write        45      0.19      49.7     414.9     0
+               - bash             close         7      0.00      20.9      39.2     0
+               - cat              read          6      0.19     377.4    1007.2     0
+               - bash             open          4      0.00     449.8     676.6     0
+               - cat              open          3      0.00      77.1      87.6     0
+               - cat              close         3      0.00      34.0      54.2     0
+               - ls               open          1      0.00     186.9     186.9     0
+               - ls               close         1      0.00      35.9      35.9     0
+         total 70 IOPS
+
+17:25:11     PID COMM             OP         IOPS     MiB/s    AVG_us    MAX_us   ERR
+               - head             write        60      0.25      51.1     272.6     0
+               - cat              read          8      0.25     298.9     698.5     0
+               - bash             close         6      0.00      75.4     372.7     0
+               - cat              close         4      0.00      27.4      32.8     0
+               - cat              open          4      0.00      88.3      94.7     0
+               - bash             open          3      0.00     849.2     985.2     0
+               - head             close         1      0.00      16.0      16.0     0
+         total 86 IOPS
+
+17:25:12     PID COMM             OP         IOPS     MiB/s    AVG_us    MAX_us   ERR
+               - head             write        45      0.19      46.1     327.0     0
+               - bash             close         6      0.00      16.1      31.1     0
+               - cat              read          6      0.19     381.7    1125.6     0
+               - cat              close         3      0.00      30.2      41.3     0
+               - cat              open          3      0.00      98.1     126.6     0
+               - bash             open          3      0.00     654.7     749.6     0
+               - ls               open          1      0.00      90.4      90.4     0
+               - ls               close         1      0.00      45.5      45.5     0
+         total 68 IOPS
+PASS go/storeiops
+===== 08-list-probes/list-probes.sh
+== Tracepoints: /sys/kernel/tracing/events/<group>/<name>
+   120 groups, 2545 tracepoints
+
+== The format file describes the arguments of one tracepoint:
+name: sys_enter_openat
+ID: 771
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
+	field:unsigned char common_preempt_lazy_count;	offset:8;	size:1;	signed:0;
+
+	field:int __syscall_nr;	offset:12;	size:4;	signed:1;
+	field:int dfd;	offset:16;	size:8;	signed:0;
+	field:const char * filename;	offset:24;	size:8;	signed:0;
+	field:int flags;	offset:32;	size:8;	signed:0;
+	field:umode_t mode;	offset:40;	size:8;	signed:0;
+
+print fmt: "dfd: 0x%08lx, filename: 0x%08lx, flags: 0x%08lx, mode: 0x%08lx", ((unsigned long)(REC->dfd)), ((unsigned long)(REC->filename)), ((unsigned long)(REC->flags)), ((unsigned long)(REC->mode))
+
+== The same through bpftrace:
+tracepoint:syscalls:sys_enter_openat
+    int __syscall_nr
+    int dfd
+    const char * filename
+    int flags
+    umode_t mode
+
+== Syscall tracepoints with 'open' in the name:
+tracepoint:syscalls:sys_enter_fsopen
+tracepoint:syscalls:sys_enter_mq_open
+tracepoint:syscalls:sys_enter_open
+tracepoint:syscalls:sys_enter_open_by_handle_at
+tracepoint:syscalls:sys_enter_open_tree
+tracepoint:syscalls:sys_enter_openat
+tracepoint:syscalls:sys_enter_openat2
+tracepoint:syscalls:sys_enter_perf_event_open
+tracepoint:syscalls:sys_enter_pidfd_open
+tracepoint:syscalls:sys_exit_fsopen
+tracepoint:syscalls:sys_exit_mq_open
+tracepoint:syscalls:sys_exit_open
+tracepoint:syscalls:sys_exit_open_by_handle_at
+tracepoint:syscalls:sys_exit_open_tree
+tracepoint:syscalls:sys_exit_openat
+tracepoint:syscalls:sys_exit_openat2
+tracepoint:syscalls:sys_exit_perf_event_open
+tracepoint:syscalls:sys_exit_pidfd_open
+
+== kprobes: kernel functions you can hook (/sys/kernel/tracing/available_filter_functions)
+   57416 functions, e.g.:
+vfs_read
+vfs_write
+
+== Kernel BTF, what CO-RE and bpftrace read struct layouts from:
+-r--r--r--. 1 root root 5225968 Nov 21 17:00 /sys/kernel/btf/vmlinux
+
+== uprobes: functions in a user binary, from its ELF symbol table:
+uprobe:/usr/bin/bash:initialize_readline
+uprobe:/usr/bin/bash:pcomp_set_readline_variables
+uprobe:/usr/bin/bash:posix_readline_initialize
+uprobe:/usr/bin/bash:readline
+uprobe:/usr/bin/bash:readline_internal_char
+===== 09-bcc-tools/bcc-tools.sh
+=== execsnoop -T
+17:26:01 TIME     COMM             PID     PPID    RET ARGS
+head             55275   54761     0 /bin/head -c 65536 /dev/urandom
+17:26:01 cat              55276   54761     0 /bin/cat /tmp/workload.tZKLd9/file3
+17:26:01 cat              55277   54761     0 /bin/cat /etc/os-release
+17:26:01 getent           55278   54761     0 /bin/getent ahosts localhost
+17:26:01 head             55279   54761     0 /bin/head -c 65536 /dev/urandom
+17:26:01 cat              55280   54761     0 /bin/cat /tmp/workload.tZKLd9/file4
+17:26:01 cat              55281   54761     0 /bin/cat /etc/os-release
+17:26:01 getent           55282   54761     0 /bin/getent ahosts localhost
+17:26:01 head             55283   54761     0 /bin/head -c 65536 /dev/urandom
+17:26:01 cat              55284   54761     0 /bin/cat /tmp/workload.tZKLd9/file5
+17:26:02 cat              55285   54761     0 /bin/cat /etc/os-release
+17:26:02 getent           55286   54761     0 /bin/getent ahosts localhost
+17:26:02 ls               55287   54761     0 /bin/ls -l /tmp/workload.tZKLd9
+17:26:02 sleep            55288   54761     0 /bin/sleep 0.05
+17:26:02 head             55289   54761     0 /bin/head -c 65536 /dev/urandom
+17:26:02 cat              55290   54761     0 /bin/cat /tmp/workload.tZKLd9/file1
+17:26:02 cat              55291   54761     0 /bin/cat /etc/os-release
+17:26:02 getent           55292   54761     0 /bin/getent ahosts localhost
+17:26:02 head             55293   54761     0 /bin/head -c 65536 /dev/urandom
+
+=== opensnoop 
+55672  bash                3   0 PID    COMM               FD ERR PATH
+/dev/null
+55672  cat                 3   0 /etc/ld.so.cache
+55672  cat                 3   0 /lib64/libc.so.6
+55672  cat                -1   2 /usr/lib/locale/locale-archive
+55672  cat                 3   0 /usr/share/locale/locale.alias
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
+55672  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+55672  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
+55672  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
+55672  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
+55672  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
+55672  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
+55672  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
+55672  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
+
+=== biolatency 
+Traceback (most recent call last):
+  File "/usr/share/bcc/tools/biolatency", line 286, in <module>
+    elif BPF.get_kprobe_functions(b'blk_account_io_done'):
+  File "/usr/lib/python3.9/site-packages/bcc/__init__.py", line 743, in get_kprobe_functions
+    for line in avail_file:
+KeyboardInterrupt
+
+=== runqlat 
+Traceback (most recent call last):
+  File "/usr/share/bcc/tools/runqlat", line 295, in <module>
+    b = BPF(text=bpf_text, cflags=["-DMAX_PID=%d" % max_pid,
+  File "/usr/lib/python3.9/site-packages/bcc/__init__.py", line 502, in __init__
+    self.module = lib.bpf_module_create_c_from_string(text,
+KeyboardInterrupt
+
+=== tcplife 
+Traceback (most recent call last):
+  File "/usr/share/bcc/tools/tcplife", line 474, in <module>
+    b = BPF(text=bpf_text)
+  File "/usr/lib/python3.9/site-packages/bcc/__init__.py", line 502, in __init__
+    self.module = lib.bpf_module_create_c_from_string(text,
+KeyboardInterrupt
+
+=== tcpretrans 
+In file included from /virtual/main.c:4:
+In file included from include/net/tcp.h:38:
+include/net/ip.h:466:14: warning: default initialization of an object of type 'typeof (rt->dst.expires)' (aka 'const unsigned long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
+  466 |                 if (mtu && time_before(jiffies, rt->dst.expires))
+      |                            ^
+include/linux/jiffies.h:108:26: note: expanded from macro 'time_before'
+  108 | #define time_before(a,b)        time_after(b,a)
+      |                                 ^
+include/linux/jiffies.h:105:3: note: expanded from macro 'time_after'
+  105 |         (typecheck(unsigned long, a) && \
+      |          ^
+include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
+   11 |         typeof(x) __dummy2; \
+      |                   ^
+In file included from /virtual/main.c:4:
+In file included from include/net/tcp.h:44:
+In file included from include/net/xfrm.h:25:
+include/net/ip6_fib.h:272:10: warning: default initialization of an object of type 'typeof (f6i->expires)' (aka 'const unsigned long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
+  272 |                 return time_after(jiffies, f6i->expires);
+      |                        ^
+
+=== profile -F 49
+Sampling at 49 Hertz of all threads by user + kernel stack... Hit Ctrl-C to end.
+
+    PyObject_RichCompare.localalias+0xee [libpython3.9.so.1.0]
+    [unknown]
+    -                profile (58777)
+        1
+
+    _raw_spin_unlock_irqrestore+0x1b [kernel]
+    _raw_spin_unlock_irqrestore+0x1b [kernel]
+    free_unref_page_commit+0x230 [kernel]
+    free_unref_page_list+0xfb [kernel]
+    release_pages+0x168 [kernel]
+    folio_batch_move_lru+0xd3 [kernel]
+    folio_add_lru+0x5b [kernel]
+    folio_putback_lru+0xe [kernel]
+    __collapse_huge_page_copy_succeeded.constprop.0+0x9a [kernel]
+    __collapse_huge_page_copy.isra.0+0xc4 [kernel]
+    collapse_huge_page+0x461 [kernel]
+    hpage_collapse_scan_pmd+0x362 [kernel]
+    khugepaged_scan_mm_slot.constprop.0+0x25c [kernel]
+
+===== 10-overhead-drops/overhead.sh
+WARNING: Kernel version (5.14.0-741.22.1.el9_9.x86_64) is lower than the minimum supported kernel version (5.15.0). Some features/scripts may not work as expected.
+Attached 1 probe
+== Programs loaded right now, with run_time_ns and run_cnt:
+265: tracepoint  name tracepoint_raw_syscalls_sys_enter_1  tag cd9e7d4e916b4342  gpl run_time_ns 269465477 run_cnt 129820
+	loaded_at 2026-11-21T17:31:03+0000  uid 0
+
+== Average cost per run of the bpftrace counting program:
+tracepoint_raw_syscalls_sys_enter_1     145006 runs     1978 ns/run
+===== 11-count-writes: C loader (make)
+bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h
+clang -O2 -g -target bpf -D__TARGET_ARCH_x86 -c count_writes.bpf.c -o count_writes.bpf.o
+cc -O2 -Wall -o count_writes_c count_writes.c -lbpf
+Counting write() calls per PID for 40 seconds.
+In another terminal try: sudo bpftool map dump name counts
+
+PID      COMM             WRITES
+60469    ?                1
+60465    ?                1
+59808    ?                1
+60409    ?                1
+59878    ?                1
+60479    ?                1
+60447    ?                1
+60148    ?                1
+60072    ?                1
+59889    ?                15
+59924    ?                1
+60037    ?                1
+59949    ?                1
+59962    ?                1
+59902    ?                1
+59932    ?                1
+59833    ?                15
+60489    ?                1
+60107    ?                1
+60134    ?                1
+60363    ?                1
+59974    ?                1
+60241    ?                1
+59824    ?                1
+735      auditd           169
+60429    ?                1
+60191    ?                1
+59841    ?                15
+60105    ?                15
+59853    ?                1
+60467    ?                1
+60415    ?                1
+60018    ?                1
+59901    ?                1
+60402    ?                1
+59940    ?                1
+59880    ?                1
+60216    ?                1
+60332    ?                1
+59814    ?                1
+60174    ?                1
+59838    ?                1
+59961    ?                15
+59870    ?                1
+60307    ?                15
+60272    ?                1
+59883    ?                1
+59864    ?                1
+60153    ?                1
+59999    ?                15
+59830    ?                1
+60466    ?                15
+60285    ?                15
+60161    ?                1
+60406    ?                1
+59975    ?                1
+59874    ?                1
+60276    ?                1
+60098    ?                1
+59956    ?                1
+60207    ?                15
+60200    ?                1
+59881    ?                15
+60373    ?                1
+60381    ?                1
+60150    ?                15
+60335    ?                1
+60274    ?                1
+60298    ?                1
+60013    ?                15
+60035    ?                15
+59888    ?                1
+60315    ?                1
+60430    ?                1
+59857    ?                1
+59893    ?                1
+59908    ?                1
+60329    ?                15
+59855    ?                15
+60289    ?                15
+60067    ?                1
+59852    ?                1
+60005    ?                15
+59907    ?                15
+59863    ?                15
+60224    ?                1
+60221    ?                1
+60031    ?                15
+60404    ?                1
+60068    ?                12
+60014    ?                1
+60395    ?                1
+60437    ?                1
+60300    ?                1
+59829    ?                15
+60309    ?                1
+59937    ?                1
+60135    ?                1
+60269    ?                15
+60293    ?                1
+59887    ?                1
+60194    ?                15
+60372    ?                1
+59840    ?                1
+60336    ?                1
+60481    ?                1
+60236    ?                1
+60108    ?                1
+60001    ?                1
+60185    ?                1
+60075    ?                1
+59958    ?                1
+59867    ?                15
+60219    ?                15
+59823    ?                15
+60041    ?                1
+59934    ?                1
+60419    ?                1
+60445    ?                1
+60270    ?                1
+59816    ?                1
+60416    ?                1
+60060    ?                15
+59875    ?                1
+60423    ?                1
+60368    ?                15
+60446    ?                1
+60006    ?                1
+60471    ?                1
+60163    ?                1
+60350    ?                1
+60212    ?                15
+60462    ?                15
+59856    ?                1
+60296    ?                1
+60367    ?                1
+815      NetworkManager   61
+60044    ?                1
+60030    ?                1
+60428    ?                1
+60277    ?                1
+60019    ?                1
+60022    ?                1
+59950    ?                1
+60490    ?                1
+60457    ?                1
+60266    ?                1
+60259    ?                1
+60303    ?                15
+60129    ?                1
+59807    ?                15
+60301    ?                1
+60010    ?                1
+60340    ?                1
+60411    ?                1
+60352    ?                1
+60124    ?                1
+59926    ?                1
+59871    ?                1
+60443    ?                15
+60028    ?                1
+60474    ?                1
+59941    ?                1
+60064    ?                15
+60248    ?                15
+59844    ?                1
+59952    ?                1
+60312    ?                1
+60027    ?                15
+59927    ?                1
+59959    ?                1
+60204    ?                32
+60023    ?                1
+60213    ?                1
+60345    ?                1
+59922    ?                1
+59945    ?                1
+60425    ?                1
+60141    ?                1
+59834    ?                1
+59925    ?                15
+60063    ?                1
+60177    ?                1
+60095    ?                1
+60009    ?                15
+60106    ?                1
+59993    ?                1
+59854    ?                1
+60209    ?                1
+60164    ?                1
+60314    ?                1
+60104    ?                1
+60326    ?                1
+60483    ?                1
+60317    ?                15
+59851    ?                15
+60426    ?                1
+59957    ?                1
+59877    ?                15
+60136    ?                15
+59826    ?                1
+59913    ?                1
+59966    ?                1
+60311    ?                15
+60273    ?                15
+60346    ?                1
+60007    ?                1
+60073    ?                1
+60364    ?                15
+60199    ?                1
+60275    ?                1
+60484    ?                15
+60353    ?                1
+59811    ?                15
+59979    ?                1
+60305    ?                1
+60488    ?                15
+59818    ?                1
+60119    ?                15
+59890    ?                1
+60210    ?                1
+60356    ?                15
+60472    ?                1
+60234    ?                1
+60056    ?                1
+60165    ?                1
+60111    ?                1
+60061    ?                1
+60249    ?                1
+60388    ?                1
+60015    ?                1
+60093    ?                1
+60077    ?                1
+60065    ?                1
+60433    ?                1
+60238    ?                15
+59835    ?                1
+59992    ?                1
+59898    ?                1
+60201    ?                1
+60112    ?                1
+59968    ?                1
+60385    ?                1
+59942    ?                1
+60318    ?                1
+60306    ?                1
+59832    ?                1
+992      rsyslogd         30
+60441    ?                1
+59909    ?                1
+59827    ?                1
+60408    ?                1
+60002    ?                1
+60464    ?                1
+59930    ?                1
+60180    ?                15
+59984    ?                1
+59933    ?                15
+59917    ?                15
+60024    ?                1
+60033    ?                1
+60197    ?                1
+59939    ?                15
+59931    ?                1
+59892    ?                1
+60016    ?                1
+59944    ?                1
+60196    ?                1
+60117    ?                1
+60328    ?                1
+59983    ?                15
+60172    ?                15
+59842    ?                1
+59923    ?                1
+59971    ?                1
+60157    ?                1
+59953    ?                1
+60468    ?                1
+59858    ?                1
+60021    ?                15
+59946    ?                1
+60227    ?                1
+60339    ?                15
+60252    ?                1
+60225    ?                12
+60287    ?                1
+60144    ?                15
+60360    ?                1
+993      sshd             6
+60100    ?                1
+60302    ?                1
+60463    ?                1
+60458    ?                15
+60378    ?                1
+59831    ?                1
+59817    ?                1
+59929    ?                15
+60290    ?                1
+60387    ?                1
+59837    ?                15
+60188    ?                15
+60181    ?                1
+60358    ?                31
+59995    ?                15
+59996    ?                1
+60130    ?                1
+60361    ?                1
+60480    ?                15
+59839    ?                1
+60125    ?                1
+59904    ?                1
+60182    ?                1
+60057    ?                1
+791      systemd-logind   69
+60206    ?                1
+60032    ?                1
+60166    ?                15
+60043    ?                15
+59862    ?                1
+60122    ?                1
+60365    ?                1
+60271    ?                1
+60147    ?                1
+59943    ?                15
+60295    ?                15
+60121    ?                1
+60254    ?                1
+59988    ?                1
+60450    ?                1
+60025    ?                1
+60434    ?                1
+59951    ?                15
+60155    ?                1
+60071    ?                1
+60333    ?                15
+60319    ?                1
+60011    ?                1
+60000    ?                1
+60400    ?                1
+60202    ?                15
+60103    ?                1
+60304    ?                1
+60040    ?                1
+60454    ?                1
+60470    ?                15
+60173    ?                1
+60139    ?                1
+60288    ?                1
+60331    ?                1
+60286    ?                1
+60440    ?                1
+59861    ?                1
+60167    ?                1
+60113    ?                1
+60427    ?                1
+60138    ?                1
+59987    ?                15
+60354    sshd-session     30
+60226    ?                1
+60432    ?                15
+60396    ?                1
+60158    ?                15
+59819    ?                15
+59948    ?                1
+60096    ?                15
+59873    ?                15
+60324    ?                1
+60116    ?                1
+59921    ?                15
+60017    ?                15
+59964    ?                1
+60118    ?                1
+59980    ?                1
+59809    ?                1
+60351    ?                15
+60047    ?                32
+59885    ?                15
+60034    ?                1
+59848    ?                1
+59812    ?                1
+59906    ?                1
+60123    ?                1
+60101    ?                1
+60183    ?                1
+59891    ?                1
+60418    ?                15
+59947    ?                15
+60184    ?                15
+59845    ?                15
+60215    ?                1
+59994    ?                1
+60159    ?                1
+60128    ?                15
+60203    ?                1
+60054    ?                1
+60283    ?                1
+60120    ?                1
+60348    ?                1
+59997    ?                1
+59920    ?                1
+60436    ?                1
+60189    ?                1
+59806    ?                1
+60151    ?                1
+60192    ?                1
+60337    ?                1
+59843    ?                1
+60453    ?                15
+60066    ?                1
+60478    ?                1
+59910    ?                1
+60152    ?                1
+60052    ?                1
+60355    ?                1
+60143    ?                1
+60170    ?                1
+59928    ?                1
+60342    ?                1
+60211    ?                1
+60126    ?                1
+59868    ?                1
+60376    ?                15
+60383    ?                15
+60341    ?                1
+60156    ?                1
+60393    ?                15
+60459    ?                1
+60379    ?                1
+60205    ?                1
+59859    ?                15
+60038    ?                1
+60263    ?                1
+59815    ?                15
+60366    ?                1
+60330    ?                1
+60261    ?                1
+59955    ?                15
+60398    ?                1
+60084    ?                1
+59899    ?                15
+59865    ?                1
+59978    ?                1
+60162    ?                15
+60048    ?                1
+60455    ?                1
+60102    ?                1
+59820    ?                1
+60003    ?                1
+60435    ?                1
+60347    ?                15
+60417    ?                1
+60039    ?                15
+59886    ?                1
+60008    ?                1
+60160    ?                1
+59846    ?                1
+60299    ?                15
+59821    ?                1
+59969    ?                15
+59989    ?                1
+60053    ?                1
+60190    ?                1
+60476    ?                15
+59897    ?                1
+60313    ?                1
+60420    ?                1
+59990    ?                1
+60020    ?                1
+59836    ?                1
+60046    ?                1
+60169    ?                1
+59847    ?                1
+59954    ?                1
+60320    ?                1
+60442    ?                1
+59985    ?                1
+60325    ?                15
+60168    ?                1
+60255    ?                1
+60179    ?                1
+60279    ?                15
+59879    ?                1
+59986    ?                1
+60477    ?                1
+59935    ?                1
+60131    ?                1
+60413    ?                2
+59849    ?                1
+59905    ?                1
+60176    ?                15
+59876    ?                1
+60029    ?                1
+59869    ?                1
+60448    ?                1
+60414    ?                15
+60444    ?                1
+60281    ?                1
+60452    ?                1
+60097    ?                1
+60260    ?                1
+60132    ?                15
+59903    ?                15
+60230    ?                15
+60334    ?                1
+60422    ?                1
+59900    ?                1
+60284    ?                1
+60089    ?                1
+59998    ?                1
+60055    ?                15
+60369    sshd-session     11
+60145    ?                1
+60424    ?                15
+60036    ?                1
+60050    ?                31
+60058    ?                1
+60082    ?                15
+60232    ?                1
+60374    ?                1
+60217    ?                1
+60439    ?                36
+60142    ?                1
+59918    ?                1
+60114    ?                15
+60486    ?                1
+59965    ?                15
+60357    ?                1
+60410    ?                1
+59896    ?                1
+60485    ?                1
+60265    ?                1
+60310    ?                1
+60473    ?                1
+60343    ?                15
+59805    count_writes_c   3
+60115    ?                1
+60110    ?                2
+59822    ?                1
+60051    ?                15
+60268    ?                2
+59810    ?                1
+59915    ?                1
+59825    ?                1
+60349    ?                1
+60243    ?                1
+59963    ?                1
+60321    ?                15
+60344    ?                1
+60461    ?                1
+60045    ?                1
+60228    ?                1
+60154    ?                15
+1        systemd          54
+59866    ?                1
+60257    ?                1
+60198    ?                15
+60069    ?                15
+59882    ?                1
+59991    ?                15
+60178    ?                1
+60370    ?                1
+59860    ?                1
+60264    ?                1
+60280    ?                1
+60256    ?                1
+60187    ?                1
+60240    ?                1
+59981    ?                1
+60208    ?                31
+59813    ?                1
+60322    ?                1
+60401    ?                1
+60327    ?                1
+60059    ?                1
+60186    ?                1
+60175    ?                1
+59914    ?                1
+59884    ?                1
+60042    ?                1
+60359    ?                1
+59977    ?                15
+60146    ?                1
+60140    ?                15
+60220    ?                1
+59912    ?                1
+60297    ?                1
+59972    ?                1
+60133    ?                1
+60222    ?                1
+60460    ?                1
+60292    ?                1
+60214    ?                1
+59895    ?                15
+60282    ?                1
+60487    ?                1
+60323    ?                1
+60012    ?                1
+59973    ?                15
+60405    ?                1
+60278    ?                1
+59976    ?                1
+60137    ?                1
+60482    ?                1
+60091    ?                1
+60291    ?                1
+59911    ?                15
+59936    ?                1
+60195    ?                1
+59970    ?                1
+60421    ?                1
+60223    ?                15
+60308    ?                1
+60229    ?                1
+59919    ?                1
+59967    ?                1
+60062    ?                1

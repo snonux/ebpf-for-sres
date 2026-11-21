@@ -103,3 +103,8 @@ foo.bpf.c ──clang -target bpf──► foo.bpf.o ──go:embed──► mai
 
 bpftrace older than 0.20 needs `args->filename` instead of `args.filename`;
 `run-all.sh` detects this and rewrites the scripts on the fly.
+
+bpftrace 0.26 (Rocky 9.9) warns that kernel 5.14 is below its minimum of 5.15
+and prints type-check warnings for 05, 06 and 07. The scripts work anyway;
+`bpftrace --no-warnings script.bt` hides the noise. Even the tools bpftrace
+ships in `/usr/share/bpftrace/tools` print these warnings on Rocky 9.9.
