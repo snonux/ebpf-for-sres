@@ -1,6 +1,6 @@
 # Presentation: eBPF for SREs
 
-30 slides, about 43 minutes including three live demos, built for a 50-minute
+32 slides, about 46 minutes including three live demos, built for a 50-minute
 slot with SREs and principal engineers. ior appears only at the end, as the
 closing demo with an LLM.
 

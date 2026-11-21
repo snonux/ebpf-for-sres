@@ -13,6 +13,7 @@
     "languages",
     "verifier",
     "limits",
+    "helpers",
     "hooks",
     "tracepoints",
     "uprobes",
@@ -35,6 +36,7 @@
     "overhead",
     "llm",
     "ior-llm",
+    "inspect",
     "reading"
   ],
   "sections": {

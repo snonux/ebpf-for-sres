@@ -9,13 +9,13 @@ import re
 # with room for questions.
 BUDGET = {
     "cover": 0.5, "why-bpf": 2, "what": 1.5, "vm": 1.5, "languages": 0.5,
-    "verifier": 1, "limits": 1, "hooks": 0.75, "tracepoints": 1.5, "uprobes": 1.0,
+    "verifier": 1, "limits": 1, "helpers": 1, "hooks": 0.75, "tracepoints": 1.5, "uprobes": 1.0,
     "try": 1.5, "demo-bpftrace": 2, "bpftrace-inside": 1.5,
     "kernel-versions": 1, "btf": 1.25, "core-diagram": 1.75,
     "ex11": 1.5, "go-build": 1, "talk": 1.5, "ex07": 1, "go-gallery": 1,
     "containers": 0.75, "k8s-workflow": 1.5, "storeiops-kernel": 1.25,
     "storeiops-user": 1.25, "demo-k8s": 4,
-    "overhead": 1.25, "llm": 1.5, "ior-llm": 5, "reading": 0.75,
+    "overhead": 1.25, "llm": 1.5, "ior-llm": 5, "inspect": 1, "reading": 0.75,
 }
 LIMIT = 50
 
