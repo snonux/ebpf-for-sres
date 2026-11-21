@@ -16,6 +16,8 @@ import (
 	"github.com/snonux/ebpf-for-sres/examples/internal/bpfrun"
 )
 
+// The compiled BPF program, embedded at build time.
+//
 //go:embed drops.bpf.o
 var bpfObj []byte
 
@@ -27,6 +29,8 @@ func main() {
 	bpfrun.Must(err)
 	defer m.Close()
 
+	// Ring buffer -> Go channel (see 02-opensnoop/main.go). The channel is
+	// small, so a slow loop below quickly stops draining the ring buffer.
 	ch := make(chan []byte, 64)
 	rb, err := m.InitRingBuf("events", ch)
 	bpfrun.Must(err)
@@ -43,12 +47,14 @@ func main() {
 		select {
 		case <-ctx.Done():
 			return
-		case <-ch:
+		case <-ch: // one event; with -slow, pretend it is expensive to handle
 			received++
 			if *slow > 0 {
 				time.Sleep(*slow)
 			}
 		case <-tick:
+			// Once a second: read the kernel's drop counter (key 0 of the
+			// per-CPU array) and print the difference to the last reading.
 			total := sumPerCPU(dropped.GetValue(unsafe.Pointer(new(uint32))))
 			fmt.Printf("received %8d   dropped %8d events/s\n", received, total-lastDropped)
 			received, lastDropped = 0, total

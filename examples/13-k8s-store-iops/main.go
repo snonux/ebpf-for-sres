@@ -25,6 +25,8 @@ import (
 	"github.com/snonux/ebpf-for-sres/examples/internal/bpfrun"
 )
 
+// The compiled BPF program, embedded at build time.
+//
 //go:embed storeiops.bpf.o
 var bpfObj []byte
 
@@ -36,6 +38,7 @@ var (
 	top      = flag.Int("top", 20, "print at most this many rows per interval")
 )
 
+// Names for enum io_op in storeiops.bpf.c, in the same order.
 var opNames = []string{"read", "write", "open", "fsync", "close"}
 
 // key and stats mirror the structs in storeiops.bpf.c.
@@ -47,9 +50,14 @@ type stats struct {
 
 func main() {
 	flag.Parse()
+	// Work out WHAT to trace before loading anything: the container's mount
+	// namespace and the device number of the filesystem at -path.
 	mntns, dev := target()
 	ensureTracefs()
 
+	// The callback runs after the object is parsed and before it is loaded.
+	// That is the only moment the BPF program's "const volatile" globals can
+	// be set: once loaded, they are read-only constants for the verifier.
 	m, err := bpfrun.Load(bpfObj, "storeiops.bpf.o", func(m *bpf.Module) error {
 		if err := m.InitGlobalVariable("target_mntns", mntns); err != nil {
 			return err
@@ -63,6 +71,8 @@ func main() {
 
 	ctx, cancel := bpfrun.Context()
 	defer cancel()
+	// The kernel side aggregates on its own. All this loop does is read and
+	// print the totals once per interval.
 	tick := bpfrun.Ticker(ctx, *interval)
 	for {
 		select {
@@ -79,18 +89,27 @@ func main() {
 func target() (mntns uint64, dev uint32) {
 	root := "/"
 	if *pid > 0 {
+		// /proc/<pid>/ns/mnt is a handle to the process's mount namespace.
+		// Its inode number identifies the namespace, and is what the BPF
+		// side compares with task->nsproxy->mnt_ns->ns.inum.
 		var st syscall.Stat_t
 		bpfrun.Must(syscall.Stat(fmt.Sprintf("/proc/%d/ns/mnt", *pid), &st))
 		mntns = st.Ino
 		root = fmt.Sprintf("/proc/%d/root", *pid)
 	}
 	full := filepath.Join(root, *path)
+	// stat() of the directory gives the device number of the filesystem it
+	// is on: st.Dev. If the parent directory is on the same device, -path is
+	// a plain directory and not a mount point of its own.
 	var st, parent syscall.Stat_t
 	bpfrun.Must(syscall.Stat(full, &st))
 	if syscall.Stat(filepath.Dir(full), &parent) == nil && parent.Dev == st.Dev {
 		fmt.Fprintf(os.Stderr, "note: %s is not a mount point, counting all I/O on the filesystem it is on\n", *path)
 	}
 	// User space and the kernel encode device numbers differently.
+	// stat() returns glibc's 64-bit dev_t; the superblock's s_dev in the
+	// kernel is major<<20 | minor. Split the first into major and minor,
+	// then build the second, so the BPF side can compare with a plain ==.
 	major := uint32((st.Dev>>8)&0xfff | (st.Dev>>32)&^0xfff)
 	minor := uint32(st.Dev&0xff | (st.Dev>>12)&^0xff)
 	dev = major<<20 | minor
@@ -121,6 +140,8 @@ func report(now time.Time, statsMap *bpf.BPFMap) {
 	var rows []row
 	for it := statsMap.Iterator(); it.Next(); {
 		raw := it.Key()
+		// Read and delete in one call: the next interval starts from zero,
+		// and no update between a separate read and delete can be lost.
 		val, err := statsMap.GetValueAndDeleteKey(unsafe.Pointer(&raw[0]))
 		if err != nil {
 			continue
@@ -135,6 +156,7 @@ func report(now time.Time, statsMap *bpf.BPFMap) {
 	}
 	sort.Slice(rows, func(i, j int) bool { return rows[i].s.Count > rows[j].s.Count })
 
+	// Totals per interval -> rates per second.
 	secs := interval.Seconds()
 	fmt.Printf("\n%s %7s %-16s %-6s %8s %9s %9s %9s %5s\n", now.Format("15:04:05"),
 		"PID", "COMM", "OP", "IOPS", "MiB/s", "AVG_us", "MAX_us", "ERR")
@@ -179,6 +201,8 @@ func mergeByComm(rows []row) []row {
 	return out
 }
 
+// decode turns the raw bytes of a struct io_stats into the Go struct: five
+// u64 fields (40 bytes) followed by the 16-byte process name.
 func decode(b []byte) (s stats) {
 	u := func(i int) uint64 { return binary.NativeEndian.Uint64(b[i*8:]) }
 	s.Count, s.Bytes, s.Errors, s.LatNs, s.MaxNs = u(0), u(1), u(2), u(3), u(4)

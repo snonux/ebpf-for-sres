@@ -34,20 +34,26 @@ func init() {
 // change global variables before the verifier sees the program, loads it into
 // the kernel and attaches every program to the hook named in its SEC("...").
 func Load(obj []byte, name string, setup func(*bpf.Module) error) (*bpf.Module, error) {
+	// 1. Parse the object: programs, maps and BTF. Nothing is in the kernel yet.
 	m, err := open(obj, name)
 	if err != nil {
 		return nil, fmt.Errorf("open BPF object: %w", err)
 	}
+	// 2. Optional: let the caller set global variables (see 13-k8s-store-iops).
 	if setup != nil {
 		if err := setup(m); err != nil {
 			m.Close()
 			return nil, err
 		}
 	}
+	// 3. Create the maps, apply CO-RE relocations and send the bytecode to the
+	// kernel, which verifies and JIT-compiles it.
 	if err := m.BPFLoadObject(); err != nil { // the verifier runs here
 		m.Close()
 		return nil, fmt.Errorf("load BPF object (verifier or permissions, are you root?): %w", err)
 	}
+	// 4. Attach every program to the hook its SEC() names. Only now do the
+	// programs start to run.
 	if err := m.AttachPrograms(); err != nil {
 		m.Close()
 		return nil, fmt.Errorf("attach: %w", err)

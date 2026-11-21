@@ -13,6 +13,8 @@ import (
 	"github.com/snonux/ebpf-for-sres/examples/internal/bpfrun"
 )
 
+// The compiled BPF program, embedded at build time.
+//
 //go:embed dnslat.bpf.o
 var bpfObj []byte
 
@@ -27,10 +29,14 @@ type event struct {
 
 func main() {
 	flag.Parse()
+	// Attaching happens inside Load: libbpf reads "uprobe/libc.so.6:getaddrinfo"
+	// from the SEC() name, locates libc and the function, and places the probe.
 	m, err := bpfrun.Load(bpfObj, "dnslat.bpf.o", nil)
 	bpfrun.Must(err)
 	defer m.Close()
 
+	// Ring buffer -> Go channel: Poll starts a goroutine that delivers each
+	// record as a byte slice (see 02-opensnoop/main.go).
 	ch := make(chan []byte, 256)
 	rb, err := m.InitRingBuf("events", ch)
 	bpfrun.Must(err)
@@ -45,6 +51,7 @@ func main() {
 		case <-ctx.Done():
 			return
 		case raw := <-ch:
+			// Decode the kernel's bytes into the Go struct.
 			var e event
 			if binary.Read(bytes.NewReader(raw), binary.NativeEndian, &e) != nil {
 				continue
