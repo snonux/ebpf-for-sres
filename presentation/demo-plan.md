@@ -1,17 +1,17 @@
 # Demo plan (50 minutes in total)
 
-The deck runs about 44 minutes including three demos (see the timing table in
-`speaker-notes.md`), which leaves about 6 minutes for questions.
+The deck runs about 45.5 minutes including three demos (see the timing table in
+`speaker-notes.md`), which leaves about 4.5 minutes for questions.
 
 | When | What | Time |
 |---|---|---|
-| Slide 15, after the bpftrace examples | Demo 1: bpftrace, and the compiler at work | 2 min |
-| Slides 26 to 28 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
-| Slide 29 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
-| Slide 32, at the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
+| Slide 17, after the bpftrace examples | Demo 1: bpftrace, and the compiler at work | 2 min |
+| Slides 28 to 30 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
+| Slide 31 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
+| Slide 34, at the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
 
-All other Go examples are a flyover: slide 24 (example 11, the anatomy every
-example shares) and slide 26 (a table of all of them). Open one in the editor
+All other Go examples are a flyover: slide 22 (example 11, the anatomy every
+example shares) and slide 25 (a table of all of them). Open one in the editor
 only if someone asks.
 
 ## Before the talk (on the Rocky Linux 9.9 demo box)
@@ -51,7 +51,7 @@ Optional, if the audience asks about cost: `sudo ./10-overhead-drops/overhead.sh
 prints the nanoseconds per program run, and
 `sudo BPFTRACE_PERF_RB_PAGES=1 ./10-overhead-drops/drops.bt > /dev/null` shows "Lost N events".
 
-## Featured Go example: storeiops (4 min, slides 27 and 28)
+## Featured Go example: storeiops (4 min, slides 29 and 30)
 
 Walk through the slides, then show in the editor:
 
@@ -72,7 +72,7 @@ Point out: `ps` in the debug container shows the app's processes; the app also
 reads `/etc/os-release` in its loop, but that never shows up, because it is not
 on `/store`; nothing from the host shows up either.
 
-With a real cluster, do the four steps from slide 30 instead (see
+With a real cluster, do the four steps from slide 28 instead (see
 `examples/13-k8s-store-iops/README.md`).
 
 ## Demo 3: ior + an LLM (5 min)
