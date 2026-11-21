@@ -8,17 +8,18 @@ import re
 # Minutes per slide. Demos are included; the total must stay within 50 minutes
 # with room for questions.
 BUDGET = {
-    "cover": 0.5, "question": 1, "why-bpf": 1, "name": 1, "what": 0.75, "lifecycle": 1.25,
-    "languages": 0.75, "verifier": 1.25, "hooks": 1, "probes-sysfs": 0.75,
-    "maps": 1.25, "overhead": 1.25,
-    "try": 0.5, "ex01": 0.75, "oneliner-open": 0.5, "ex03": 0.5, "ex04": 0.5,
-    "oneliner-latency": 0.75, "ex06": 0.75, "ex07": 0.75, "demo-bpftrace": 3,
-    "kernel-versions": 1, "core": 1.5, "ex12": 0.75, "ex11": 1.5,
-    "go-build": 1, "go-gallery": 0.75,
-    "toolbox": 0.5, "stap-grid": 1,
-    "containers": 0.75, "k8s-workflow": 1.5, "storeiops-kernel": 1.5,
+    "cover": 0.5, "question": 1, "why-bpf": 1, "name": 1, "what": 0.75, "lifecycle": 1,
+    "vm": 1.25, "languages": 0.5, "verifier": 1, "hooks": 0.75, "tracepoints": 1.25, "probes-sysfs": 0.5,
+    "talk": 1, "maps": 0.75, "overhead": 1.25,
+    "try": 0.5, "bpftrace-inside": 1.25, "ex01": 0.75, "oneliner-open": 0.5,
+    "demo-bpftrace": 2,
+    "kernel-versions": 1, "core": 1, "core-diagram": 1.25, "compiler-vs-core": 1,
+    "ex11": 1.25, "go-build": 0.75, "ex03": 0.5, "ex04": 0.5, "ex05": 0.5,
+    "ex06": 0.5, "ex07": 0.5, "ex12": 0.5, "go-gallery": 0.25,
+    "toolbox": 0.5, "stap-grid": 0.75,
+    "containers": 0.75, "k8s-workflow": 1.5, "storeiops-kernel": 1.25,
     "storeiops-user": 1.25, "demo-k8s": 4,
-    "production": 1, "llm": 1.5, "ior-llm": 5, "reading": 0.5, "next-steps": 0.5,
+    "production": 0.75, "llm": 1.5, "ior-llm": 5, "reading": 0.5, "next-steps": 0.5,
 }
 LIMIT = 50
 
