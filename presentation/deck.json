@@ -22,6 +22,7 @@
     "oneliner-open",
     "demo-bpftrace",
     "kernel-versions",
+    "btf",
     "core-diagram",
     "compiler-vs-core",
     "ex11",

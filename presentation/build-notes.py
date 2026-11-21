@@ -12,7 +12,7 @@ BUDGET = {
     "verifier": 1, "hooks": 0.75, "tracepoints": 1.5, "talk": 1.5, "overhead": 1.25,
     "try": 0.5, "bpftrace-inside": 1.25, "ex01": 0.75, "oneliner-open": 0.5,
     "demo-bpftrace": 2,
-    "kernel-versions": 1, "core-diagram": 2, "compiler-vs-core": 1,
+    "kernel-versions": 1, "btf": 1.25, "core-diagram": 1.75, "compiler-vs-core": 1,
     "ex11": 1.25, "go-build": 0.75, "ex07": 1, "go-gallery": 1,
     "toolbox": 1.25,
     "containers": 0.75, "k8s-workflow": 1.5, "storeiops-kernel": 1.25,
