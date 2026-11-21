@@ -11,7 +11,7 @@ Every example runs on **Rocky Linux 9.9**.
 
 ## Contents
 
-- `presentation/`: the deck (33 slides, about 44 minutes with three demos,
+- `presentation/`: the deck (34 slides, about 44 minutes with three demos,
   for a 50-minute slot). See [presentation/README.md](presentation/README.md),
   [speaker notes and timing](presentation/speaker-notes.md) and the
   [demo plan](presentation/demo-plan.md).
