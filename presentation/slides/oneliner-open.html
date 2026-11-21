@@ -17,6 +17,6 @@
 <p style="font-size:24px; background:#1E1830; border:1px solid #3A2F57; padding:12px 24px; border-radius:999px"><b>comm</b>: process name, built in</p>
 <p style="font-size:24px; background:#1E1830; border:1px solid #3A2F57; padding:12px 24px; border-radius:999px"><b>args.filename</b>: the syscall argument</p>
 </div>
-<p style="position:absolute; left:128px; bottom:56px; width:1664px; font-size:22px; color:#8F86AD">examples/02-opensnoop/ · opensnoop.bt · opensnoop.stp · Go (ring buffer)</p>
+<p style="position:absolute; left:128px; bottom:56px; width:1664px; font-size:22px; color:#8F86AD">examples/02-opensnoop/ · opensnoop.bt · Go (ring buffer)</p>
 <aside>This is essentially opensnoop in one line. The probe fires when any process enters the openat syscall. comm is the process name, args.filename is a pointer into user memory, and str() copies the string out safely. Useful in incidents: which process keeps touching that config file, is something hammering /proc, is a service reading certificates on every request? We saw where args.filename comes from on the probes slide. Unlike the counters, this prints one line per event, so the Go version of it streams events through a ring buffer.</aside>
 </section>

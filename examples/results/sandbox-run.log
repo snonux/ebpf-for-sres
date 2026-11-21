@@ -3,22 +3,16 @@ bpftrace: bpftrace v0.20.2
 go: go version go1.24.7 linux/amd64
 
 PASS  01-opens-per-process/opens.bt
-SKIP  01-opens-per-process/opens.stp  (stap not installed)
 PASS  01-opens-per-process (Go, libbpfgo)
 PASS  02-opensnoop/opensnoop.bt
-SKIP  02-opensnoop/opensnoop.stp  (stap not installed)
 PASS  02-opensnoop (Go, libbpfgo)
 PASS  03-syscalls-per-process/syscalls.bt
-SKIP  03-syscalls-per-process/syscalls.stp  (stap not installed)
 PASS  03-syscalls-per-process (Go, libbpfgo)
 PASS  04-read-size-hist/readsize.bt
-SKIP  04-read-size-hist/readsize.stp  (stap not installed)
 PASS  04-read-size-hist (Go, libbpfgo)
 PASS  05-read-latency/readlat.bt
-SKIP  05-read-latency/readlat.stp  (stap not installed)
 PASS  05-read-latency (Go, libbpfgo)
 FAIL  06-vfs-read-latency-kprobe/vfsreadlat.bt  (see /home/user/ebpf-for-sres/examples/run-all.log)
-SKIP  06-vfs-read-latency-kprobe/vfsreadlat.stp  (stap not installed)
 FAIL  06-vfs-read-latency-kprobe (Go, libbpfgo)  (see /home/user/ebpf-for-sres/examples/run-all.log)
 PASS  07-dns-latency-uprobe/dnslat.bt
 PASS  07-dns-latency-uprobe (Go, libbpfgo)
@@ -33,7 +27,7 @@ FAIL  09-bcc-tools/bcc-tools.sh (execsnoop opensnoop biolatency runqlat tcplife 
 PASS  10-overhead-drops/overhead.sh
 PASS  11-count-writes (C, libbpf: build, load, attach, read map)
 
-21 passed, 3 failed, 6 skipped. Full output: /home/user/ebpf-for-sres/examples/run-all.log
+21 passed, 3 failed, 0 skipped. Full output: /home/user/ebpf-for-sres/examples/run-all.log
 
 ################ run-all.log (each example's output, trimmed to 40 lines)
 ===== 01-opens-per-process/opens.bt

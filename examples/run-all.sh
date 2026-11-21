@@ -1,11 +1,11 @@
 #!/bin/bash
 # Runs every example and reports PASS/FAIL/SKIP per variant.
 #
-#   sudo ./run-all.sh                 bpftrace, SystemTap (if installed) and shell examples
+#   sudo ./run-all.sh                 bpftrace and shell examples
 #   sudo GO=1 ./run-all.sh            also builds and tests every Go (libbpfgo) version with mage
 #   sudo SECS=10 ./run-all.sh         run each tracing example longer
 #
-# Setup: ./setup-rocky9.sh (add --go for the Go toolchain, --stap for SystemTap).
+# Setup: ./setup-rocky9.sh (add --go for the Go toolchain).
 # Each tracing example runs for $SECS seconds while workload.sh generates file
 # I/O and DNS lookups. Full output goes to run-all.log.
 set -u
@@ -67,7 +67,6 @@ run_bt() {
 
 echo "Kernel: $(uname -r)   $(grep PRETTY_NAME /etc/os-release | cut -d= -f2)"
 echo "bpftrace: $(bpftrace --version 2>&1)"
-command -v stap >/dev/null && echo "stap: $(stap -V 2>&1 | head -1)"
 [ "$GO" = 1 ] && echo "go: $(go version 2>&1)"
 echo
 
@@ -76,17 +75,6 @@ for dir in [0-9][0-9]-*/; do
     for bt in "$dir"/*.bt; do
         [ -e "$bt" ] || continue
         run_bt "$bt"; result $? "$bt"
-    done
-    for stp in "$dir"/*.stp; do
-        [ -e "$stp" ] || continue
-        if command -v stap >/dev/null; then
-            # The first run compiles a kernel module: allow it time before tracing.
-            echo "===== $stp (compile)" >> "$LOG"
-            stap -p4 "$stp" >> "$LOG" 2>&1 && run_traced "$stp" stap "$stp"
-            result $? "$stp"
-        else
-            result 77 "$stp" "stap not installed"
-        fi
     done
     if [ -f "$dir/magefile.go" ]; then
         if [ "$GO" = 1 ]; then

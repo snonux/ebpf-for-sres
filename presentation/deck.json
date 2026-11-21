@@ -58,7 +58,7 @@
       "start": "kernel-versions"
     },
     "fleet": {
-      "description": "Ready-made tools, SystemTap, and running on many hosts",
+      "description": "Ready-made tools and running on many hosts",
       "start": "toolbox"
     },
     "k8s": {

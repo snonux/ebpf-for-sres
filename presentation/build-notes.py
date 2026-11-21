@@ -14,7 +14,7 @@ BUDGET = {
     "demo-bpftrace": 2,
     "kernel-versions": 1, "btf": 1.25, "core-diagram": 1.75, "compiler-vs-core": 1,
     "ex11": 1.25, "go-build": 0.75, "ex07": 1, "go-gallery": 1,
-    "toolbox": 1.25,
+    "toolbox": 1.0,
     "containers": 0.75, "k8s-workflow": 1.5, "storeiops-kernel": 1.25,
     "storeiops-user": 1.25, "demo-k8s": 4,
     "production": 0.75, "llm": 1.5, "ior-llm": 5, "reading": 0.75,

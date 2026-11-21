@@ -11,11 +11,11 @@ Every example runs on **Rocky Linux 9.9**.
 
 ## Contents
 
-- `presentation/`: the deck (38 slides, about 44 minutes with three demos,
+- `presentation/`: the deck (33 slides, about 44 minutes with three demos,
   for a 50-minute slot). See [presentation/README.md](presentation/README.md),
   [speaker notes and timing](presentation/speaker-notes.md) and the
   [demo plan](presentation/demo-plan.md).
-- `examples/`: 13 examples, one directory each, as bpftrace, SystemTap and Go
+- `examples/`: 13 examples, one directory each, as bpftrace and Go
   (libbpfgo) where it makes sense, with a test runner.
   See [examples/README.md](examples/README.md).
 - `examples/13-k8s-store-iops/`: a static Go + BPF tool that measures IOPS on a
@@ -27,7 +27,7 @@ Every example runs on **Rocky Linux 9.9**.
 ```sh
 cd examples
 sudo ./setup-rocky9.sh --all      # enables CRB, installs bpftrace, bcc-tools, bpftool,
-                                  # clang/llvm, libbpf-devel, Go, mage, SystemTap
+                                  # clang/llvm, libbpf-devel, Go, mage
 sudo GO=1 ./run-all.sh            # runs every example and prints PASS/FAIL/SKIP
 ```
 
@@ -38,6 +38,5 @@ Ubuntu 24.04 sandbox on a 6.18 kernel with bpftrace 0.20.2, Go 1.24 and
 libbpfgo v0.9.2-libbpf-1.5.1, not on Rocky 9.9: no Rocky machine or image was
 reachable from there. 21 of 24 runnable checks passed. The three failures are
 environmental: that kernel has no kprobe support (example 06, bpftrace and Go)
-and bcc-tools is not packaged there (example 09). SystemTap was not available,
-so the `.stp` scripts are untested. Please run `sudo GO=1 ./run-all.sh` on a
+and bcc-tools is not packaged there (example 09). Please run `sudo GO=1 ./run-all.sh` on a
 Rocky 9.9 box before presenting.
