@@ -22,7 +22,7 @@ sudo ./setup-rocky9.sh --all
 sudo GO=1 ./run-all.sh                   # everything should PASS; keep the log as a fallback
 podman build -t ebpf-static -f Containerfile.static .
 podman run --rm -v "$PWD:/src:z" -w /src/13-k8s-store-iops ebpf-static mage static
-podman pull registry.access.redhat.com/ubi9/ubi-minimal cgr.dev/chainguard/busybox
+podman pull registry.access.redhat.com/ubi9/ubi-minimal docker.io/library/busybox
 ```
 
 Pull the images beforehand so the demo does not depend on the network. Use a

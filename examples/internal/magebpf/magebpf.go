@@ -124,7 +124,7 @@ func Build(name string) error {
 	return sh.RunWithV(goEnv(), "go", "build", "-o", name, ".")
 }
 
-// Static builds a fully static binary: copy it to any x86_64 Linux box (or into
+// Static builds a fully static binary: copy it to any Linux box of the same architecture (or into
 // a debug container) and run it. Needs libelf.a, libzstd.a, libz.a and glibc's
 // libc.a, which Rocky 9 does not all ship: use the Containerfile in examples/.
 func Static(name string) error {
