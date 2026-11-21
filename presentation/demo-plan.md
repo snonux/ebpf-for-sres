@@ -1,17 +1,17 @@
 # Demo plan (50 minutes in total)
 
-The deck runs about 42.5 minutes including three demos (see the timing table in
-`speaker-notes.md`), which leaves about 7.5 minutes for questions.
+The deck runs about 43.5 minutes including three demos (see the timing table in
+`speaker-notes.md`), which leaves about 6.5 minutes for questions.
 
 | When | What | Time |
 |---|---|---|
-| Slide 11, after the bpftrace slide | Demo 1: bpftrace, and the compiler at work | 2 min |
-| Slides 22 to 24 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
-| Slide 25 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
-| Slide 28, near the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
+| Slide 12, after the bpftrace slide | Demo 1: bpftrace, and the compiler at work | 2 min |
+| Slides 23 to 25 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
+| Slide 26 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
+| Slide 29, near the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
 
-All other Go examples are a flyover: slide 16 (example 11, the anatomy every
-example shares) and slide 20 (a table of all of them). Open one in the editor
+All other Go examples are a flyover: slide 17 (example 11, the anatomy every
+example shares) and slide 21 (a table of all of them). Open one in the editor
 only if someone asks.
 
 ## Before the talk (on the Rocky Linux 9.9 demo box)
@@ -47,7 +47,7 @@ Optional, if the audience asks about cost: `sudo ./10-overhead-drops/overhead.sh
 prints the nanoseconds per program run, and
 `sudo BPFTRACE_PERF_RB_PAGES=1 ./10-overhead-drops/drops.bt > /dev/null` shows "Lost N events".
 
-## Featured Go example: storeiops (4 min, slides 23 and 24)
+## Featured Go example: storeiops (4 min, slides 24 and 25)
 
 Walk through the slides, then show in the editor:
 
@@ -76,7 +76,7 @@ sudo podman rm -f -t 0 app debug
 Point out: `ps` in the debug container shows the app's processes; only I/O on
 `/store` is counted; nothing from the host or other containers shows up.
 
-With a real cluster, do the four steps from slide 22 instead (see
+With a real cluster, do the four steps from slide 23 instead (see
 `examples/13-k8s-store-iops/README.md`).
 
 ## Demo 3: ior + an LLM (5 min)

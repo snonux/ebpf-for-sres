@@ -12,6 +12,7 @@
     "vm",
     "languages",
     "verifier",
+    "limits",
     "hooks",
     "tracepoints",
     "uprobes",
