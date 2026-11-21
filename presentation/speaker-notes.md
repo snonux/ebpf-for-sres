@@ -53,7 +53,7 @@ _Title and framing for SREs and principal engineers_
 
 `cover` · 0:30 min · starts at 0:00
 
-Goal of this talk, about 45 minutes including three demos, questions at the end, 50 in total: you know what BPF is and why it is safe on production boxes, can run the one-liners yourself, understand CO-RE and how a small Go tool with libbpfgo is put together, can trace a Kubernetes pod from a debug container, and see how an LLM turns a syscall trace plus source code into a diagnosis. All examples are in the examples/ directory of this repository and run on Rocky Linux 9.9. The command at the bottom counts file opens per process name; we will come back to it.
+Goal of this talk, about 45 minutes including three demos, questions at the end, 50 in total: you know what BPF is and why it is safe on production boxes, can run the one-liners yourself, understand CO-RE and how a small Go tool with libbpfgo is put together (the same works in C with libbpf or in Rust with Aya or libbpf-rs), can trace a Kubernetes pod from a debug container, and see how an LLM turns a syscall trace plus source code into a diagnosis. All examples are in the examples/ directory of this repository and run on Rocky Linux 9.9. The command at the bottom counts file opens per process name; we will come back to it.
 
 ## Section: basics
 
