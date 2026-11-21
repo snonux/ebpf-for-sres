@@ -15,6 +15,7 @@
     "verifier",
     "hooks",
     "tracepoints",
+    "uprobes",
     "talk",
     "overhead",
     "try",
