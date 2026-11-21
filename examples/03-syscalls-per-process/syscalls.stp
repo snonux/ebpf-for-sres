@@ -1,0 +1,16 @@
+#!/usr/bin/env stap
+// 03 in SystemTap: syscalls per process name (syscall_any uses the
+// raw_syscalls tracepoints, like the bpftrace version).
+// Run: sudo stap syscalls.stp   (Ctrl-C prints the counts)
+global calls
+
+probe syscall_any
+{
+    calls[execname()]++
+}
+
+probe end
+{
+    foreach (comm in calls+)
+        printf("@[%s]: %d\n", comm, calls[comm])
+}

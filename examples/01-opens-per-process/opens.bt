@@ -1,0 +1,7 @@
+#!/usr/bin/env bpftrace
+// 01: count openat() calls per process name.
+// Run: sudo ./opens.bt   (Ctrl-C prints the counts)
+tracepoint:syscalls:sys_enter_openat
+{
+    @[comm] = count();
+}

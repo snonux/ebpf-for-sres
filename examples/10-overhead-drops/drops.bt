@@ -1,0 +1,9 @@
+#!/usr/bin/env bpftrace
+// 10: what happens when the kernel produces events faster than you read them.
+// One printf per syscall on the whole host, through a deliberately tiny buffer:
+// bpftrace reports "Lost N events" instead of slowing the traced programs down.
+// Run: sudo BPFTRACE_PERF_RB_PAGES=1 ./drops.bt > /dev/null
+tracepoint:raw_syscalls:sys_enter
+{
+    printf("%d %s %d\n", pid, comm, args.id);
+}

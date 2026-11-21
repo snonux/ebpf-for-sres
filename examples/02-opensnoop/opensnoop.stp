@@ -1,0 +1,7 @@
+#!/usr/bin/env stap
+// 02 in SystemTap: who is opening which files?
+// Run: sudo stap opensnoop.stp   (Ctrl-C to stop)
+probe syscall.openat
+{
+    printf("%-16s %s\n", execname(), filename)
+}

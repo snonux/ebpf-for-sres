@@ -1,0 +1,16 @@
+#!/usr/bin/env stap
+// 04 in SystemTap: histogram of bytes returned by successful read() calls.
+// Run: sudo stap readsize.stp   (Ctrl-C prints the histogram)
+global bytes
+
+probe syscall.read.return
+{
+    if (retval > 0)
+        bytes <<< retval
+}
+
+probe end
+{
+    printf("@bytes:\n")
+    print(@hist_log(bytes))
+}

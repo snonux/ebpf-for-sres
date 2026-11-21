@@ -1,0 +1,24 @@
+#!/usr/bin/env stap
+// 05 in SystemTap: read() latency histogram in microseconds, with the same
+// per-thread enter/exit pairing as the bpftrace and Go versions.
+// Run: sudo stap readlat.stp   (Ctrl-C prints the histogram)
+global start, usecs
+
+probe syscall.read
+{
+    start[tid()] = gettimeofday_us()
+}
+
+probe syscall.read.return
+{
+    if (tid() in start) {
+        usecs <<< gettimeofday_us() - start[tid()]
+        delete start[tid()]
+    }
+}
+
+probe end
+{
+    printf("@usecs:\n")
+    print(@hist_log(usecs))
+}

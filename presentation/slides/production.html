@@ -10,16 +10,16 @@
 </div>
 <div style="display:flex; flex-direction:column; gap:10px; background:#1A2540; padding:32px 36px; border-radius:16px">
 <h3 style="font-size:32px; font-weight:600; color:#F3F1EA">Buffers can fill up</h3>
-<p style="font-size:28px; line-height:1.4">When the ring buffer is full, events are dropped. In ior, raise -mapSize.</p>
+<p style="font-size:28px; line-height:1.4">When the ring buffer is full, events are dropped. Count drops, as example 10 does.</p>
 </div>
 <div style="display:flex; flex-direction:column; gap:10px; background:#1A2540; padding:32px 36px; border-radius:16px">
 <h3 style="font-size:32px; font-weight:600; color:#F3F1EA">Check the kernel</h3>
-<p style="font-size:28px; line-height:1.4">You need BTF (/sys/kernel/btf/vmlinux). Ring buffers need kernel 5.8 or newer.</p>
+<p style="font-size:28px; line-height:1.4">BTF must exist (/sys/kernel/btf/vmlinux). On Rocky 9 it does; bcc and stap also need kernel-devel for the running kernel.</p>
 </div>
 <div style="display:flex; flex-direction:column; gap:10px; background:#1A2540; padding:32px 36px; border-radius:16px">
 <h3 style="font-size:32px; font-weight:600; color:#F3F1EA">It needs privileges</h3>
 <p style="font-size:28px; line-height:1.4">Root, or CAP_BPF plus CAP_PERFMON. Treat it like any other root tool.</p>
 </div>
 </div>
-<aside>Practical checklist. Start with a short -duration and a PID filter, watch the host's CPU while tracing, and prefer aggregation over per-event output on hot paths. Most modern distributions ship BTF-enabled kernels (RHEL 8.2+, Ubuntu 20.10+, recent Debian and Fedora), but check before an incident, not during one.</aside>
+<aside>Practical checklist. Start with a short -duration and a PID filter, watch the host's CPU while tracing, and prefer aggregation over per-event output on hot paths. Most modern distributions ship BTF-enabled kernels (RHEL 8.2+, Ubuntu 20.10+, recent Debian and Fedora), but check before an incident, not during one: run examples/run-all.sh on a representative box now. In Kubernetes, the namespace must allow a privileged debug container, which is worth arranging with the platform team before you need it.</aside>
 </section>

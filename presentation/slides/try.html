@@ -3,6 +3,6 @@
 <h1 style="font-size:96px; font-weight:700; line-height:1.1; color:#111A2E">Try it: bpftrace one-liners</h1>
 <p style="font-size:36px; line-height:1.4; width:1400px">bpftrace is awk for kernel events. Every program has the same shape:</p>
 <p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:44px; background:#111A2E; color:#F3F1EA; padding:24px 40px; border-radius:16px; width:900px">probe /filter/ { action }</p>
-<p style="font-size:30px">Run as root on a recent kernel. Install with your package manager: <b>bpftrace</b>.</p>
-<aside>Switch to a terminal if you can and run these live. bpftrace compiles the script to BPF, loads it, and prints map contents when you press Ctrl-C. The filter is optional. Syntax note: recent bpftrace versions write tracepoint arguments as args.name; older versions use args->name.</aside>
+<p style="font-size:30px">Rocky 9.9: <b>sudo dnf install bpftrace</b>, or <b>examples/setup-rocky9.sh</b> for everything. Each example also comes as SystemTap and as Go.</p>
+<aside>Switch to a terminal if you can and run these live. bpftrace compiles the script to BPF, loads it, and prints map contents when you press Ctrl-C. The filter is optional. Syntax note: recent bpftrace versions, including the one in Rocky 9.9, write tracepoint arguments as args.name; versions before 0.20 use args->name. Every example directory has the bpftrace script, a SystemTap script where it makes sense, and a Go program with libbpfgo; run-all.sh tests them all.</aside>
 </section>

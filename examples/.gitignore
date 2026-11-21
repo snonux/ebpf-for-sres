@@ -1,7 +1,20 @@
+# Build outputs
+.build/
+*.bpf.o
+vmlinux.h
+01-opens-per-process/opens
+02-opensnoop/opensnoop
+03-syscalls-per-process/syscalls
+04-read-size-hist/readsize
+05-read-latency/readlat
+06-vfs-read-latency-kprobe/vfsreadlat
+07-dns-latency-uprobe/dnslat
+10-overhead-drops/drops
+11-count-writes/count_writes
+11-count-writes/count_writes_c
+12-execsnoop-core/execsnoop
+13-k8s-store-iops/storeiops
+# run-all.sh scratch files
 run-all.log
 out.tmp
 compat.bt
-libbpf.tmp
-libbpf/vmlinux.h
-libbpf/*.o
-libbpf/count_writes

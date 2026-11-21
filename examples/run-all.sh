@@ -1,14 +1,21 @@
 #!/bin/bash
-# Runs every example from the eBPF intro deck and reports PASS/FAIL.
-# Usage: sudo ./run-all.sh
-# Needs: bpftrace, bcc-tools, bpftool, clang, llvm, libbpf-devel, gcc, make
-#        (see setup-rocky9.sh). Each tracing example runs for $SECS seconds
-#        while workload.sh generates file I/O.
+# Runs every example and reports PASS/FAIL/SKIP per variant.
+#
+#   sudo ./run-all.sh                 bpftrace, SystemTap (if installed) and shell examples
+#   sudo GO=1 ./run-all.sh            also builds and tests every Go (libbpfgo) version with mage
+#   sudo SECS=10 ./run-all.sh         run each tracing example longer
+#
+# Setup: ./setup-rocky9.sh (add --go for the Go toolchain, --stap for SystemTap).
+# Each tracing example runs for $SECS seconds while workload.sh generates file
+# I/O and DNS lookups. Full output goes to run-all.log.
 set -u
 cd "$(dirname "$0")"
+# sudo resets PATH on Rocky; mage is installed to /usr/local/bin by setup-rocky9.sh.
+export PATH=$PATH:/usr/local/bin:/usr/local/go/bin
 SECS=${SECS:-5}
-LOG=${LOG:-run-all.log}
-pass=0; fail=0
+GO=${GO:-0}
+LOG=$PWD/${LOG:-run-all.log}
+pass=0; fail=0; skip=0
 : > "$LOG"
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -16,66 +23,114 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 result() {
-    if [ "$1" -eq 0 ]; then echo "PASS  $2"; pass=$((pass + 1))
-    else echo "FAIL  $2  (see $LOG)"; fail=$((fail + 1)); fi
+    case $1 in
+        0) echo "PASS  $2"; pass=$((pass + 1)) ;;
+        77) echo "SKIP  $2  ($3)"; skip=$((skip + 1)) ;;
+        *) echo "FAIL  $2  (see $LOG)"; fail=$((fail + 1)) ;;
+    esac
 }
 
-# Runs a bpftrace script for $SECS seconds under load. It passes when the probes
-# attach, the program exits cleanly on SIGINT, and it printed some output.
-run_bt() {
-    local script=$1
-    echo "===== $script" >> "$LOG"
+# bpftrace older than 0.20 only knows args->name, not args.name.
+compat=0
+bpftrace -e 'BEGIN { exit(); } tracepoint:syscalls:sys_enter_openat { printf("%s", str(args.filename)); }' \
+    >/dev/null 2>&1 || compat=1
+
+# Runs a tracer for $SECS seconds under load. It passes when the probes attach,
+# the program exits cleanly on SIGINT, and it printed something.
+run_traced() {   # name, command...
+    local name=$1; shift
+    echo "===== $name" >> "$LOG"
     bash workload.sh $((SECS + 3)) &
     local load=$!
-    local src=$script
-    # bpftrace older than 0.20 only knows args->name, not args.name.
-    if ! bpftrace -e 'BEGIN { exit(); } tracepoint:syscalls:sys_enter_openat { printf("%s", str(args.filename)); }' >/dev/null 2>&1; then
-        sed 's/args\./args->/g' "$script" > compat.bt; src=compat.bt
-    fi
-    timeout -s INT "$SECS" bpftrace "$src" > out.tmp 2>&1
+    sleep 0.5
+    timeout -s INT "$SECS" "$@" > out.tmp 2>&1
     local status=$?
     wait "$load"
-    cat out.tmp >> "$LOG"
-    local lines attached=0
-    lines=$(grep -vcE '^(Attaching|WARNING|ERROR: Unknown error -1: couldn.t set RLIMIT|$)' out.tmp)
-    grep -q '^Attaching' out.tmp && attached=1
-    rm -f out.tmp compat.bt
+    head -40 out.tmp >> "$LOG"   # streaming examples print thousands of lines
+    local lines
+    lines=$(grep -vcE '^(Attaching|WARNING|ERROR: Unknown error -1: couldn.t set RLIMIT|Pass [0-9]|$)' out.tmp)
+    rm -f out.tmp
     [ "$status" -eq 0 ] || [ "$status" -eq 124 ] || return 1
-    [ "$attached" -eq 1 ] && [ "$lines" -gt 0 ]
+    [ "$lines" -gt 0 ]
+}
+
+run_bt() {
+    local src=$1
+    if [ "$compat" -eq 1 ]; then
+        sed 's/args\./args->/g' "$1" > compat.bt; src=compat.bt
+    fi
+    run_traced "$1" bpftrace "$src"
+    local rc=$?
+    rm -f compat.bt
+    return $rc
 }
 
 echo "Kernel: $(uname -r)   $(grep PRETTY_NAME /etc/os-release | cut -d= -f2)"
 echo "bpftrace: $(bpftrace --version 2>&1)"
+command -v stap >/dev/null && echo "stap: $(stap -V 2>&1 | head -1)"
+[ "$GO" = 1 ] && echo "go: $(go version 2>&1)"
 echo
 
-for s in 01-opens-per-process.bt 02-opensnoop.bt 03-syscalls-per-process.bt \
-         04-read-size-hist.bt 05-read-latency.bt 05b-vfs-read-latency-kprobe.bt; do
-    run_bt "$s"; result $? "$s"
+for dir in [0-9][0-9]-*/; do
+    dir=${dir%/}
+    for bt in "$dir"/*.bt; do
+        [ -e "$bt" ] || continue
+        run_bt "$bt"; result $? "$bt"
+    done
+    for stp in "$dir"/*.stp; do
+        [ -e "$stp" ] || continue
+        if command -v stap >/dev/null; then
+            # The first run compiles a kernel module: allow it time before tracing.
+            echo "===== $stp (compile)" >> "$LOG"
+            stap -p4 "$stp" >> "$LOG" 2>&1 && run_traced "$stp" stap "$stp"
+            result $? "$stp"
+        else
+            result 77 "$stp" "stap not installed"
+        fi
+    done
+    if [ -f "$dir/magefile.go" ]; then
+        if [ "$GO" = 1 ]; then
+            echo "===== $dir: mage test" >> "$LOG"
+            (cd "$dir" && mage test) > out.tmp 2>&1
+            status=$?
+            tail -40 out.tmp >> "$LOG"; rm -f out.tmp
+            result $status "$dir (Go, libbpfgo)"
+        else
+            result 77 "$dir (Go, libbpfgo)" "set GO=1"
+        fi
+    fi
 done
 
-echo "===== 06-list-probes.sh" >> "$LOG"
-bash 06-list-probes.sh >> "$LOG" 2>&1 && grep -q 'sys_enter_openat' "$LOG"
-result $? "06-list-probes.sh"
+echo "===== 08-list-probes/list-probes.sh" >> "$LOG"
+bash 08-list-probes/list-probes.sh > out.tmp 2>&1; status=$?
+cat out.tmp >> "$LOG"
+[ "$status" -eq 0 ] && grep -q 'sys_enter_openat' out.tmp
+result $? "08-list-probes/list-probes.sh"; rm -f out.tmp
 
-echo "===== libbpf example" >> "$LOG"
-(
-    cd libbpf && make clean >/dev/null && make &&
-    { bash ../workload.sh $((SECS + 3)) & ./count_writes "$SECS"; wait; } &&
-    bpftool btf dump file /sys/kernel/btf/vmlinux format c > /dev/null
-) > libbpf.tmp 2>&1
-status=$?
-cat libbpf.tmp >> "$LOG"
-[ "$status" -eq 0 ] && grep -qE '^[0-9]+ +[^ ]+ +[0-9]+$' libbpf.tmp
-result $? "libbpf/count_writes (build, load, attach, read map)"
-rm -f libbpf.tmp
-
-echo "===== 07-bcc-tools.sh" >> "$LOG"
+echo "===== 09-bcc-tools/bcc-tools.sh" >> "$LOG"
 bash workload.sh $((SECS * 8)) &
 load=$!
-bash 07-bcc-tools.sh "$SECS" >> "$LOG" 2>&1
-result $? "07-bcc-tools.sh (execsnoop opensnoop biolatency runqlat tcplife tcpretrans profile)"
+bash 09-bcc-tools/bcc-tools.sh "$SECS" >> "$LOG" 2>&1
+result $? "09-bcc-tools/bcc-tools.sh (execsnoop opensnoop biolatency runqlat tcplife tcpretrans profile)"
 wait "$load"
 
+echo "===== 10-overhead-drops/overhead.sh" >> "$LOG"
+bash 10-overhead-drops/overhead.sh "$SECS" > out.tmp 2>&1
+status=$?
+cat out.tmp >> "$LOG"
+[ "$status" -eq 0 ] && grep -q 'ns/run' out.tmp
+result $? "10-overhead-drops/overhead.sh"; rm -f out.tmp
+
+echo "===== 11-count-writes: C loader (make)" >> "$LOG"
+(
+    cd 11-count-writes && make clean >/dev/null && make &&
+    { bash ../workload.sh $((SECS + 3)) & ./count_writes_c "$SECS"; wait; }
+) > out.tmp 2>&1
+status=$?
+cat out.tmp >> "$LOG"
+[ "$status" -eq 0 ] && grep -qE '^[0-9]+ +[^ ]+ +[0-9]+$' out.tmp
+result $? "11-count-writes (C, libbpf: build, load, attach, read map)"; rm -f out.tmp
+
 echo
-echo "$pass passed, $fail failed. Full output: $LOG"
+echo "$pass passed, $fail failed, $skip skipped. Full output: $LOG"
 [ "$fail" -eq 0 ]
