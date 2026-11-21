@@ -17,7 +17,6 @@
     "uprobes",
     "try",
     "demo-bpftrace",
-    "toolbox",
     "bpftrace-inside",
     "kernel-versions",
     "btf",
@@ -47,7 +46,7 @@
       "start": "why-bpf"
     },
     "handson": {
-      "description": "bpftrace in one slide, demo 1, bcc-tools, and why compiling on the host is the catch",
+      "description": "bpftrace in one slide, demo 1, and why compiling on the host is the catch",
       "start": "try"
     },
     "portable": {
