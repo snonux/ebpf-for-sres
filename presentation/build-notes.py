@@ -8,7 +8,7 @@ import re
 # Minutes per slide. Demos are included; the total must stay within 50 minutes
 # with room for questions.
 BUDGET = {
-    "cover": 0.5, "why-bpf": 2, "what": 1.5, "vm": 1.5, "languages": 0.5, "dtrace": 0.75,
+    "cover": 0.5, "why-bpf": 2, "what": 1.5, "vm": 1.5, "languages": 0.5,
     "verifier": 1, "hooks": 0.75, "tracepoints": 1.5, "uprobes": 1.0, "talk": 1.5, "overhead": 1.25,
     "try": 0.5, "bpftrace-inside": 1.25, "ex01": 0.75, "oneliner-open": 0.5,
     "demo-bpftrace": 2,
