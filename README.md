@@ -33,10 +33,22 @@ sudo GO=1 ./run-all.sh            # runs every example and prints PASS/FAIL/SKIP
 
 ## Test status
 
-`examples/results/sandbox-run.log` is the latest full run. It was made in an
-Ubuntu 24.04 sandbox on a 6.18 kernel with bpftrace 0.20.2, Go 1.24 and
-libbpfgo v0.9.2-libbpf-1.5.1, not on Rocky 9.9: no Rocky machine or image was
-reachable from there. 21 of 24 runnable checks passed. The three failures are
-environmental: that kernel has no kprobe support (example 06, bpftrace and Go)
-and bcc-tools is not packaged there (example 09). Please run `sudo GO=1 ./run-all.sh` on a
-Rocky 9.9 box before presenting.
+Tested 2026-11-21 on **Rocky Linux 9.9** (GenericCloud image, kernel
+5.14.0-741.22.1.el9_9.x86_64, bpftrace 0.26.0, bcc-tools, Go 1.27.3, libbpf
+1.5.0) in a qemu VM: `sudo ./setup-rocky9.sh --all && sudo GO=1 SECS=40
+./run-all.sh` gives **24 passed, 0 failed**, including the kprobe example 06
+and bcc-tools (09). Full log: [`examples/results/rocky-9.9-run.log`](examples/results/rocky-9.9-run.log).
+The VM ran without KVM (software emulation), hence `SECS=40`: bpftrace needs
+longer than 5 s to compile there. On real hardware the default is enough.
+
+Also tested:
+
+* `Containerfile.static` builds on Rocky 9 for amd64 and arm64, and
+  `mage static` produces a static storeiops for both.
+* `podman-demo.sh` with the static amd64 binary on the Rocky 9.9 VM.
+* The Kubernetes workflow from `examples/13-k8s-store-iops/README.md` with the
+  static **arm64** binary: k3s on Amazon Linux 2023 arm64 (kernel 6.1, the EKS
+  node OS), app pod with an NFS 4.2 volume on `/store`, `kubectl debug
+  --target --profile=sysadmin`, `kubectl cp`, trace. Also the
+  `kubectl debug node/...` variant. The arm64 VM was emulated too, so the
+  latency numbers mean nothing; the counts and the filtering were correct.

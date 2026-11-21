@@ -52,6 +52,6 @@ echo "tracefs:  $(ls /sys/kernel/tracing/events | wc -l) tracepoint groups"
 echo "bpftrace: $(bpftrace --version)"
 echo "bpftool:  $(bpftool version | head -1)"
 echo "libbpf:   $(rpm -q libbpf)"
-[ "$want_go" -eq 1 ] && echo "go:       $(go version)   mage: $(mage -version | head -1)"
+[ "$want_go" -eq 1 ] && echo "go:       $(go version)   mage: $(/usr/local/bin/mage -version | head -1)"
 echo
 echo "Next: sudo ./run-all.sh   (sudo GO=1 ./run-all.sh to include the Go versions)"

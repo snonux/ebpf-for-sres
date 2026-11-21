@@ -14,7 +14,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 secs=${1:-10}
 APP_IMAGE=${APP_IMAGE:-registry.access.redhat.com/ubi9/ubi-minimal:latest}
-DEBUG_IMAGE=${DEBUG_IMAGE:-cgr.dev/chainguard/busybox:latest}
+DEBUG_IMAGE=${DEBUG_IMAGE:-docker.io/library/busybox:latest}
 
 [ -x storeiops ] || { echo "build it first: mage static"; exit 1; }
 cleanup() { podman rm -f -t 0 storeiops-app storeiops-debug >/dev/null 2>&1 || true; }

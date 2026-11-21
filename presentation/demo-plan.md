@@ -22,7 +22,7 @@ sudo ./setup-rocky9.sh --all
 sudo GO=1 ./run-all.sh                   # everything should PASS; keep the log as a fallback
 podman build -t ebpf-static -f Containerfile.static .
 podman run --rm -v "$PWD:/src:z" -w /src/13-k8s-store-iops ebpf-static mage static
-podman pull registry.access.redhat.com/ubi9/ubi-minimal cgr.dev/chainguard/busybox
+podman pull registry.access.redhat.com/ubi9/ubi-minimal docker.io/library/busybox
 ```
 
 Pull the images beforehand so the demo does not depend on the network. Use a
@@ -35,9 +35,15 @@ large terminal font, two panes side by side.
 sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat { @[comm] = count(); }'    # 10 s, Ctrl-C
 sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat {
     printf("%-16s %s\n", comm, str(args.filename)); }'                              # live, Ctrl-C
-sudo bpftrace -d all -e 'tracepoint:syscalls:sys_enter_openat { @[comm] = count(); }' | less
-                                                   # parser, semantic pass, LLVM IR
+sudo bpftrace -d all -e 'tracepoint:syscalls:sys_enter_openat { @[comm] = count(); }' 2>&1 | less
+                                                   # parser, semantic pass, LLVM IR (q, then Ctrl-C)
 ```
+
+Rocky 9.9 ships bpftrace 0.26, which prints "Kernel version (5.14.0-...) is
+lower than the minimum supported kernel version (5.15.0)" on every start, and
+type-check warnings for the latency scripts (05, 06, 07). Everything works
+(tested on 5.14.0-741.22.1.el9_9). For a clean screen on stage add
+`--no-warnings`: `sudo bpftrace --no-warnings -e '...'`.
 
 The point of the last command: bpftrace compiles on the host every time
 (slide "bpftrace compiles on the host you are debugging"). The Go examples that

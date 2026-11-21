@@ -52,6 +52,13 @@ podman run --rm -v "$PWD:/src:z" -w /src/13-k8s-store-iops ebpf-static mage stat
 file 13-k8s-store-iops/storeiops    # ... statically linked
 ```
 
+**arm64 nodes** (Graviton and similar) need an arm64 binary. Simplest: run the
+same two commands on an arm64 machine. To cross-build on an x86_64 box, register
+qemu-user-static for aarch64 and add `--platform linux/arm64` to both `podman`
+commands. Under emulation `/sys/kernel/btf/vmlinux` is still the x86_64
+kernel's, so first put an arm64 `vmlinux.h` into `examples/.build/` (on any
+arm64 node: `bpftool btf dump file /sys/kernel/btf/vmlinux format c`).
+
 For a quick dynamically linked build on the same host: `mage` (see the
 examples README for `setup-rocky9.sh --go`).
 
@@ -76,6 +83,18 @@ distroless (a Chainguard image, for example): the tools come with the debug imag
 
 ```sh
 kubectl debug -it pod/app-7d9f --target=app --profile=sysadmin \
+    --image=docker.io/library/busybox:latest --container=ebpf-debug -- sh
+```
+
+The debug image must run as **root**. `--profile=sysadmin` makes the container
+privileged but keeps the image's user, and a non-root user has no capabilities
+even in a privileged container: `ls /proc/1/root/store` says "Permission
+denied" and loading BPF fails. `cgr.dev/chainguard/busybox` runs as `nonroot`,
+so it needs `--custom` to override the user:
+
+```sh
+echo '{"securityContext":{"runAsUser":0}}' > root.json
+kubectl debug -it pod/app-7d9f --target=app --profile=sysadmin --custom=root.json \
     --image=cgr.dev/chainguard/busybox:latest --container=ebpf-debug -- sh
 ```
 

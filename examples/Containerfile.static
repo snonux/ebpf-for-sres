@@ -7,8 +7,10 @@
 #   podman build -t ebpf-static -f Containerfile.static .
 #   podman run --rm -v "$PWD:/src:z" -w /src/13-k8s-store-iops ebpf-static mage static
 #
-# The result, 13-k8s-store-iops/storeiops, runs on any x86_64 Linux with BTF
-# (kernel 5.8 or newer), including inside a Kubernetes debug container.
+# The result, 13-k8s-store-iops/storeiops, runs on any Linux of the build's
+# architecture with BTF (kernel 5.8 or newer), including inside a Kubernetes
+# debug container. For arm64 nodes, run the same two commands on an arm64 box
+# (see 13-k8s-store-iops/README.md for cross-building with --platform).
 FROM docker.io/rockylinux/rockylinux:9
 
 RUN dnf -y install dnf-plugins-core && \
