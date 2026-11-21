@@ -16,6 +16,8 @@ import (
 	"github.com/snonux/ebpf-for-sres/examples/internal/bpfrun"
 )
 
+// The compiled BPF program, embedded at build time.
+//
 //go:embed count_writes.bpf.o
 var bpfObj []byte
 
@@ -27,11 +29,14 @@ func main() {
 
 	fmt.Println("Counting write() calls per PID. Ctrl-C to print.")
 	fmt.Println("In another terminal try: sudo bpftool map dump name counts")
+	// The kernel counts. This process only waits.
 	bpfrun.Wait()
 
 	counts, err := m.GetMap("counts") // step 4
 	bpfrun.Must(err)
 	fmt.Printf("\n%-8s %-16s %s\n", "PID", "COMM", "WRITES")
+	// Iterator is libbpfgo's wrapper around bpf_map_get_next_key (the loop in
+	// count_writes.c). Keys and values are raw bytes: a u32 PID and a u64 count.
 	for it := counts.Iterator(); it.Next(); {
 		key := it.Key()
 		val, err := counts.GetValue(unsafe.Pointer(&key[0]))

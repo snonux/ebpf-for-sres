@@ -161,7 +161,7 @@ Here is the same idea as a picture, because this is what makes a copied binary k
 
 `ex11` · 1:30 min · starts at 21:15
 
-Now the same idea as the bpftrace one-liner at the top, written as a tool. bpftrace generated the map, the lookup and the increment for us; here we spell them out once. This is the anatomy of every Go example in the repository, and of ior. On the left the kernel half: a map declaration and a function with a SEC name that says where to attach it. On the right the user half with libbpfgo: embed the compiled object into the binary, open it, load it (this is when the verifier runs, and where you get its log if it refuses), attach every program to the hook its section names, wait, and read the map with an iterator. The same object is also loaded by a 60-line C program in the same directory, so you can compare libbpf in C with libbpfgo directly. The Go code on the slide is lightly trimmed of error handling.
+Now the same idea as the bpftrace one-liner at the top, written as a tool. bpftrace generated the map, the lookup and the increment for us; here we spell them out once. This is the anatomy of every Go example in the repository, and of ior. On the left the kernel half: a map declaration and a function with a SEC name that says where to attach it. On the right the user half with libbpfgo: embed the compiled object into the binary, open it, load it (this is when the verifier runs, and where you get its log if it refuses), attach every program to the hook its section names, wait, and read the map with an iterator. The same object is also loaded by a short C program in the same directory, so you can compare libbpf in C with libbpfgo directly. The Go code on the slide is lightly trimmed of error handling.
 
 ### 19. One static binary, built ahead of time
 
@@ -185,7 +185,7 @@ uprobes do for user space what kprobes do for the kernel. We hook getaddrinfo in
 
 `go-gallery` · 1:00 min · starts at 26:15
 
-A flyover, not a walkthrough: once you have seen example 07 you have seen them all. Each one is a BPF C file and a Go file of about fifty lines, and the middle column is the bpftrace script it re-implements, which is in the same directory. They differ only in the hook and in how the data comes back: a map read at the end, a histogram array, or a ring buffer drained continuously. Pick any one to read after the talk. The last line, storeiops, is the one we look at in detail in the Kubernetes part.
+A flyover, not a walkthrough: once you have seen example 07 you have seen them all. Each one is a BPF C file and a Go file of about fifty lines plus comments, and the middle column is the bpftrace script it re-implements, which is in the same directory. They differ only in the hook and in how the data comes back: a map read at the end, a histogram array, or a ring buffer drained continuously. Pick any one to read after the talk. The last line, storeiops, is the one we look at in detail in the Kubernetes part.
 
 ## Section: k8s
 
