@@ -8,18 +8,16 @@ import re
 # Minutes per slide. Demos are included; the total must stay within 50 minutes
 # with room for questions.
 BUDGET = {
-    "cover": 0.5, "question": 1, "why-bpf": 1, "name": 1, "what": 0.75, "lifecycle": 1,
-    "vm": 1.25, "languages": 0.5, "verifier": 1, "hooks": 0.75, "tracepoints": 1.25, "probes-sysfs": 0.5,
-    "talk": 1, "maps": 0.75, "overhead": 1.25,
+    "cover": 0.5, "why-bpf": 2, "what": 1.5, "vm": 1.5, "languages": 0.5,
+    "verifier": 1, "hooks": 0.75, "tracepoints": 1.5, "talk": 1.5, "overhead": 1.25,
     "try": 0.5, "bpftrace-inside": 1.25, "ex01": 0.75, "oneliner-open": 0.5,
     "demo-bpftrace": 2,
-    "kernel-versions": 1, "core": 1, "core-diagram": 1.25, "compiler-vs-core": 1,
-    "ex11": 1.25, "go-build": 0.75, "ex03": 0.5, "ex04": 0.5, "ex05": 0.5,
-    "ex06": 0.5, "ex07": 0.5, "ex12": 0.5, "go-gallery": 0.25,
-    "toolbox": 0.5, "stap-grid": 0.75,
+    "kernel-versions": 1, "core-diagram": 2, "compiler-vs-core": 1,
+    "ex11": 1.25, "go-build": 0.75, "ex07": 1, "go-gallery": 1,
+    "toolbox": 1.25,
     "containers": 0.75, "k8s-workflow": 1.5, "storeiops-kernel": 1.25,
     "storeiops-user": 1.25, "demo-k8s": 4,
-    "production": 0.75, "llm": 1.5, "ior-llm": 5, "reading": 0.5, "next-steps": 0.5,
+    "production": 0.75, "llm": 1.5, "ior-llm": 5, "reading": 0.75,
 }
 LIMIT = 50
 
@@ -45,9 +43,9 @@ for i, sid in enumerate(deck["order"], 1):
     rows.append(f"| {i} | {title} | {mmss(mins)} | {mmss(total)} |")
     total += mins
 assert total <= LIMIT, f"deck runs {total} min"
-out += [f"**Total: {mmss(total)} min including both demos, leaving {mmss(LIMIT - total)} min of the "
+out += [f"**Total: {mmss(total)} min including the three demos, leaving {mmss(LIMIT - total)} min of the "
         f"{LIMIT} for questions.** The Go example shown in depth is 13 (storeiops); the others are a flyover "
-        "(slides ex11 and go-gallery). Three demos: bpftrace, the Kubernetes workflow with storeiops, "
+        "(slides ex11, ex07 and go-gallery). Three demos: bpftrace, the Kubernetes workflow with storeiops, "
         "and ior + an LLM. See `demo-plan.md`.", "",
         "| # | Slide | Time | Starts at |", "|---|---|---|---|"] + rows + [""] + body
 open("speaker-notes.md", "w").write("\n".join(out))

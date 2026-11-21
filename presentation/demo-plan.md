@@ -1,14 +1,14 @@
 # Demo plan (50 minutes in total)
 
-The deck runs about 46 minutes including three demos (see the timing table in
-`speaker-notes.md`), which leaves about 4 minutes for questions.
+The deck runs about 43 minutes including three demos (see the timing table in
+`speaker-notes.md`), which leaves about 7 minutes for questions.
 
 | When | What | Time |
 |---|---|---|
-| Slide 20, after the bpftrace examples | Demo 1: bpftrace, and the compiler at work | 2 min |
-| Slides 37 to 39 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
-| Slide 40 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
-| Slide 43, at the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
+| Slide 15, after the bpftrace examples | Demo 1: bpftrace, and the compiler at work | 2 min |
+| Slides 25 to 27 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
+| Slide 28 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
+| Slide 31, at the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
 
 All other Go examples are a flyover: slide 24 (example 11, the anatomy every
 example shares) and slide 26 (a table of all of them). Open one in the editor
@@ -45,7 +45,7 @@ Optional, if the audience asks about cost: `sudo ./10-overhead-drops/overhead.sh
 prints the nanoseconds per program run, and
 `sudo BPFTRACE_PERF_RB_PAGES=1 ./10-overhead-drops/drops.bt > /dev/null` shows "Lost N events".
 
-## Featured Go example: storeiops (4 min, slides 38 and 39)
+## Featured Go example: storeiops (4 min, slides 26 and 27)
 
 Walk through the slides, then show in the editor:
 

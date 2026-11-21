@@ -7,19 +7,14 @@
   "title": "eBPF for SREs",
   "order": [
     "cover",
-    "question",
     "why-bpf",
-    "name",
     "what",
-    "lifecycle",
     "vm",
     "languages",
     "verifier",
     "hooks",
     "tracepoints",
-    "probes-sysfs",
     "talk",
-    "maps",
     "overhead",
     "try",
     "bpftrace-inside",
@@ -27,20 +22,13 @@
     "oneliner-open",
     "demo-bpftrace",
     "kernel-versions",
-    "core",
     "core-diagram",
     "compiler-vs-core",
     "ex11",
     "go-build",
-    "ex03",
-    "ex04",
-    "ex05",
-    "ex06",
     "ex07",
-    "ex12",
     "go-gallery",
     "toolbox",
-    "stap-grid",
     "containers",
     "k8s-workflow",
     "storeiops-kernel",
@@ -49,8 +37,7 @@
     "production",
     "llm",
     "ior-llm",
-    "reading",
-    "next-steps"
+    "reading"
   ],
   "sections": {
     "intro": {
@@ -59,7 +46,7 @@
     },
     "basics": {
       "description": "What BPF is, how programs and user space talk, why it is safe, what it costs",
-      "start": "question"
+      "start": "why-bpf"
     },
     "handson": {
       "description": "bpftrace one-liners, how bpftrace compiles on the host, demo 1",
@@ -78,7 +65,7 @@
       "start": "containers"
     },
     "wrap": {
-      "description": "Production checklist, LLMs, the ior + LLM demo, reading, next steps",
+      "description": "Production checklist, LLMs, the ior + LLM demo, reading",
       "start": "production"
     }
   },
