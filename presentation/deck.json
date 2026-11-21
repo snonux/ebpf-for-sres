@@ -15,59 +15,52 @@
     "hooks",
     "tracepoints",
     "uprobes",
-    "talk",
-    "overhead",
     "try",
-    "bpftrace-inside",
-    "ex01",
-    "oneliner-open",
     "demo-bpftrace",
+    "toolbox",
+    "bpftrace-inside",
     "kernel-versions",
     "btf",
     "core-diagram",
     "ex11",
     "go-build",
+    "talk",
     "ex07",
     "go-gallery",
-    "toolbox",
     "containers",
     "k8s-workflow",
     "storeiops-kernel",
     "storeiops-user",
     "demo-k8s",
-    "production",
+    "overhead",
     "llm",
     "ior-llm",
     "reading"
   ],
   "sections": {
     "intro": {
-      "description": "Title and framing for SREs and principal engineers",
+      "description": "Title and where the talk is going",
       "start": "cover"
     },
     "basics": {
-      "description": "What BPF is, how programs and user space talk, why it is safe, what it costs",
+      "description": "What BPF is, the VM, the verifier and where programs attach",
       "start": "why-bpf"
     },
     "handson": {
-      "description": "bpftrace one-liners, how bpftrace compiles on the host, demo 1",
+      "description": "bpftrace in one slide, demo 1, bcc-tools, and why compiling on the host is the catch",
       "start": "try"
     },
     "portable": {
-      "description": "Kernel versions, CO-RE, why not a compiler in production, and the Go examples with libbpfgo",
+      "description": "Build once: kernel differences, BTF, CO-RE, and static Go binaries with libbpfgo",
       "start": "kernel-versions"
-    },
-    "fleet": {
-      "description": "Ready-made tools and running on many hosts",
-      "start": "toolbox"
     },
     "k8s": {
       "description": "Containers and the Kubernetes debug-container workflow with a static BPF binary, demo 2",
       "start": "containers"
     },
     "wrap": {
-      "description": "Production checklist, LLMs, the ior + LLM demo, reading",
-      "start": "production"
+      "description": "Cost and drops in production, LLMs, the ior + LLM demo, references",
+      "start": "overhead"
     }
   },
   "faces": {

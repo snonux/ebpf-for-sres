@@ -1,17 +1,17 @@
 # Demo plan (50 minutes in total)
 
-The deck runs about 44 minutes including three demos (see the timing table in
-`speaker-notes.md`), which leaves about 6 minutes for questions.
+The deck runs about 43 minutes including three demos (see the timing table in
+`speaker-notes.md`), which leaves about 7 minutes for questions.
 
 | When | What | Time |
 |---|---|---|
-| Slide 16, after the bpftrace examples | Demo 1: bpftrace, and the compiler at work | 2 min |
-| Slides 26 to 28 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
-| Slide 29 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
-| Slide 32, at the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
+| Slide 11, after the bpftrace slide | Demo 1: bpftrace, and the compiler at work | 2 min |
+| Slides 23 to 25 | The featured Go example, storeiops, at medium depth (kernel side, user side) | 4 min |
+| Slide 26 | Demo 2: the Kubernetes debug-container workflow, rehearsed with podman | 4 min |
+| Slide 29, near the end | Demo 3: static ior in the debug container, then an LLM reads the trace and the app's source | 5 min |
 
-All other Go examples are a flyover: slide 20 (example 11, the anatomy every
-example shares) and slide 23 (a table of all of them). Open one in the editor
+All other Go examples are a flyover: slide 17 (example 11, the anatomy every
+example shares) and slide 21 (a table of all of them). Open one in the editor
 only if someone asks.
 
 ## Before the talk (on the Rocky Linux 9.9 demo box)
@@ -31,21 +31,23 @@ large terminal font, two panes side by side.
 ## Demo 1: bpftrace live (2 min)
 
 ```sh
-cd examples
-sudo ./01-opens-per-process/opens.bt              # 10 s, Ctrl-C: counts per process
-sudo ./02-opensnoop/opensnoop.bt                 # live events, Ctrl-C
-sudo bpftrace -d all ./01-opens-per-process/opens.bt | less   # parser, semantic pass, LLVM IR
+# typed out, no wrapper scripts
+sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat { @[comm] = count(); }'    # 10 s, Ctrl-C
+sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat {
+    printf("%-16s %s\n", comm, str(args.filename)); }'                              # live, Ctrl-C
+sudo bpftrace -d all -e 'tracepoint:syscalls:sys_enter_openat { @[comm] = count(); }' | less
+                                                   # parser, semantic pass, LLVM IR
 ```
 
 The point of the last command: bpftrace compiles on the host every time
-(slide "bpftrace is a compiler that runs on your host"). The Go examples that
+(slide "bpftrace and bcc compile on the host you are debugging"). The Go examples that
 follow do the same work without a compiler on the target.
 
 Optional, if the audience asks about cost: `sudo ./10-overhead-drops/overhead.sh`
 prints the nanoseconds per program run, and
 `sudo BPFTRACE_PERF_RB_PAGES=1 ./10-overhead-drops/drops.bt > /dev/null` shows "Lost N events".
 
-## Featured Go example: storeiops (4 min, slides 27 and 28)
+## Featured Go example: storeiops (4 min, slides 24 and 25)
 
 Walk through the slides, then show in the editor:
 
@@ -59,14 +61,22 @@ Walk through the slides, then show in the editor:
 
 ```sh
 cd examples/13-k8s-store-iops
-sudo ./podman-demo.sh 15
+# typed out; podman-demo.sh runs the same five commands for rehearsal
+sudo podman run -d --name app --mount type=tmpfs,destination=/store \
+    registry.access.redhat.com/ubi9/ubi-minimal \
+    sh -c 'while true; do dd if=/dev/zero of=/store/data bs=4k count=64 conv=fsync status=none; done'
+sudo podman run -d --name debug --privileged --pid=container:app \
+    --entrypoint /bin/sh cgr.dev/chainguard/busybox -c 'sleep 3600'
+sudo podman cp storeiops debug:/tmp/storeiops
+sudo podman exec debug ps
+sudo podman exec debug /tmp/storeiops -pid 1 -path /store -bycomm -duration 15s
+sudo podman rm -f -t 0 app debug
 ```
 
-Point out: `ps` in the debug container shows the app's processes; the app also
-reads `/etc/os-release` in its loop, but that never shows up, because it is not
-on `/store`; nothing from the host shows up either.
+Point out: `ps` in the debug container shows the app's processes; only I/O on
+`/store` is counted; nothing from the host or other containers shows up.
 
-With a real cluster, do the four steps from slide 26 instead (see
+With a real cluster, do the four steps from slide 23 instead (see
 `examples/13-k8s-store-iops/README.md`).
 
 ## Demo 3: ior + an LLM (5 min)
