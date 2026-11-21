@@ -8,7 +8,7 @@ import re
 # Minutes per slide. Demos are included; the total must stay within 50 minutes
 # with room for questions.
 BUDGET = {
-    "cover": 0.5, "question": 1, "name": 1, "what": 0.75, "lifecycle": 1.25,
+    "cover": 0.5, "question": 1, "why-bpf": 1, "name": 1, "what": 0.75, "lifecycle": 1.25,
     "languages": 0.75, "verifier": 1.25, "hooks": 1, "probes-sysfs": 0.75,
     "maps": 1.25, "overhead": 1.25,
     "try": 0.5, "ex01": 0.75, "oneliner-open": 0.5, "ex03": 0.5, "ex04": 0.5,
