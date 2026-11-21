@@ -1,0 +1,50 @@
+# Build environment for fully static example binaries (mage static), based on
+# Rocky Linux 9. Adapted from ior's Dockerfile (github.com/snonux/ior), which
+# has done this on Rocky 9 for a while: Rocky 9 ships no libelf.a and no
+# libzstd.a, so both are built from source; glibc-static and zlib-static come
+# from CRB; the elfutils source RPM comes from the baseos-source repo.
+#
+#   podman build -t ebpf-static -f Containerfile.static .
+#   podman run --rm -v "$PWD:/src:z" -w /src/13-k8s-store-iops ebpf-static mage static
+#
+# The result, 13-k8s-store-iops/storeiops, runs on any Linux of the build's
+# architecture with BTF (kernel 5.8 or newer), including inside a Kubernetes
+# debug container. For arm64 nodes, run the same two commands on an arm64 box
+# (see 13-k8s-store-iops/README.md for cross-building with --platform).
+FROM docker.io/rockylinux/rockylinux:9
+
+RUN dnf -y install dnf-plugins-core && \
+    dnf config-manager --set-enabled crb && \
+    dnf config-manager --set-enabled baseos-source && \
+    dnf -y install gcc make git clang llvm bpftool golang \
+        elfutils-libelf-devel zlib-devel zlib-static glibc-static libzstd-devel \
+        bzip2 rpm-build wget && \
+    dnf -y builddep elfutils && \
+    dnf clean all
+
+# libelf.a from the distribution's own elfutils source package.
+RUN cd /root && dnf download --source elfutils-libelf && \
+    rpm -ivh elfutils-*.src.rpm && mkdir -p /root/src && \
+    tar -C /root/src -xjf rpmbuild/SOURCES/elfutils-*.tar.bz2 && \
+    cd /root/src/elfutils-* && \
+    ./configure --enable-deterministic-archives --disable-debuginfod --disable-libdebuginfod && \
+    make -C lib -j"$(nproc)" && make -C libelf -j"$(nproc)" && \
+    cp libelf/libelf.a /usr/lib64/ && \
+    rm -rf /root/src /root/rpmbuild /root/elfutils-*.src.rpm
+
+# libzstd.a from upstream (libzstd-devel has only the shared library).
+RUN wget -q https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz -O /tmp/zstd.tgz && \
+    tar -C /tmp -xzf /tmp/zstd.tgz && make -C /tmp/zstd-1.5.5/lib -j"$(nproc)" libzstd.a && \
+    cp /tmp/zstd-1.5.5/lib/libzstd.a /usr/lib64/ && rm -rf /tmp/zstd*
+
+# Let Go fetch a newer toolchain if go.mod ever needs one (Rocky's golang lags).
+ENV GOTOOLCHAIN=auto
+RUN GOBIN=/usr/local/bin go install github.com/magefile/mage@v1.15.0
+
+# libbpfgo + static libbpf, pinned like ior. magebpf finds it through $LIBBPFGO,
+# so the static build does not reuse a libbpf.a built on the host.
+RUN git clone https://github.com/aquasecurity/libbpfgo /opt/libbpfgo && \
+    git -C /opt/libbpfgo checkout v0.9.2-libbpf-1.5.1 && \
+    git -C /opt/libbpfgo submodule update --init --recursive && \
+    make -C /opt/libbpfgo libbpfgo-static
+ENV LIBBPFGO=/opt/libbpfgo

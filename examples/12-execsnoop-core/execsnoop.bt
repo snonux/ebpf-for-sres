@@ -1,0 +1,9 @@
+#!/usr/bin/env bpftrace
+// 12: every new program with its parent PID. curtask->real_parent->tgid walks
+// kernel structs: bpftrace resolves the field offsets from the running kernel's
+// BTF, which is the same idea as CO-RE in the C/Go version.
+// Run: sudo ./execsnoop.bt
+tracepoint:sched:sched_process_exec
+{
+    printf("%-7d %-7d %-16s %s\n", pid, curtask->real_parent->tgid, comm, str(args.filename));
+}

@@ -1,0 +1,74 @@
+<section id="vm" data-transition="fade" style="background:#14101F; color:#C4BCE0; font-family:'Inter', Arial, sans-serif; padding:72px 128px 0; display:flex; flex-direction:column; gap:28px">
+<div style="display:flex; flex-direction:column; gap:10px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#FF4FA3">How it works</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:56px; font-weight:600; line-height:1.1; color:#F5F3FF">A small virtual machine inside the kernel</h2>
+</div>
+<div style="position:relative; width:1664px; height:740px">
+<div style="position:absolute; left:0; top:0; width:1664px; height:190px; background:#1E1830; border:1px solid #3A2F57; border-radius:16px"></div>
+<p style="position:absolute; left:24px; top:12px; font-size:22px; font-weight:600; letter-spacing:2px; color:#8F86AD">USER SPACE</p>
+<div style="position:absolute; left:40px; top:56px; width:300px; height:110px; background:#1E1830; border:1px solid #3A2F57; border-radius:12px; padding:14px 20px; display:flex; flex-direction:column; gap:4px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:28px; font-weight:600; color:#F5F3FF">Your app</h3>
+<p style="font-size:22px">uprobes hook in here</p>
+</div>
+<div style="position:absolute; left:400px; top:56px; width:820px; height:110px; background:#1E1830; border:1px solid #3A2F57; border-radius:12px; padding:14px 20px; display:flex; flex-direction:column; gap:4px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:28px; font-weight:600; color:#F5F3FF">Loader</h3>
+<p style="font-size:22px">Go, C, Rust or bpftrace: loads and attaches the program</p>
+</div>
+<div style="position:absolute; left:1280px; top:56px; width:344px; height:110px; background:#1E1830; border:1px solid #3A2F57; border-radius:12px; padding:14px 20px; display:flex; flex-direction:column; gap:4px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:28px; font-weight:600; color:#F5F3FF">Your tool</h3>
+<p style="font-size:22px">prints the results</p>
+</div>
+<p style="position:absolute; left:580px; top:192px; font-size:22px; font-weight:600; color:#FF4FA3">bpf() syscall: load the bytecode</p>
+<p style="position:absolute; left:1100px; top:192px; width:336px; text-align:right; font-size:22px; font-weight:600; color:#FF4FA3">bpf() / mmap: read</p>
+<div style="position:absolute; left:0; top:230px; width:1664px; height:510px; background:#0B0814; border-radius:16px"></div>
+<p style="position:absolute; left:24px; top:242px; font-size:22px; font-weight:600; letter-spacing:2px; color:#8F86AD">LINUX KERNEL</p>
+<p style="position:absolute; left:40px; top:282px; font-size:22px; font-weight:600; color:#C4BCE0">Hooks</p>
+<div style="position:absolute; left:40px; top:322px; width:300px; height:76px; background:#2A2142; border-radius:10px; padding:0 20px; display:flex; align-items:center"><p style="font-size:24px; color:#F5F3FF">uprobes</p></div>
+<div style="position:absolute; left:40px; top:418px; width:300px; height:76px; background:#2A2142; border-radius:10px; padding:0 20px; display:flex; align-items:center"><p style="font-size:24px; color:#F5F3FF">kprobes</p></div>
+<div style="position:absolute; left:40px; top:514px; width:300px; height:76px; background:#2A2142; border-radius:10px; padding:0 20px; display:flex; align-items:center"><p style="font-size:24px; color:#F5F3FF">tracepoints</p></div>
+<div style="position:absolute; left:40px; top:610px; width:300px; height:76px; background:#2A2142; border-radius:10px; padding:0 20px; display:flex; align-items:center"><p style="font-size:24px; color:#F5F3FF">network, sched, LSM</p></div>
+<div style="position:absolute; left:400px; top:282px; width:820px; height:420px; background:#0B0814; border:3px solid #FF7AC0; border-radius:16px"></div>
+<p style="position:absolute; left:428px; top:300px; font-size:30px; font-weight:600; color:#F5F3FF">BPF virtual machine <span style="font-size:22px; font-weight:400; color:#FF7AC0">&#160;the sandbox</span></p>
+<div style="position:absolute; left:428px; top:362px; width:160px; height:86px; background:#2A2142; border-radius:10px; display:flex; align-items:center; justify-content:center"><p style="font-size:24px; color:#F5F3FF">Bytecode</p></div>
+<div style="position:absolute; left:628px; top:362px; width:160px; height:86px; background:#7CF2D0; border-radius:10px; display:flex; align-items:center; justify-content:center"><p style="font-size:24px; font-weight:600; color:#14101F">Verifier</p></div>
+<div style="position:absolute; left:828px; top:362px; width:160px; height:86px; background:#2A2142; border-radius:10px; display:flex; align-items:center; justify-content:center"><p style="font-size:24px; color:#F5F3FF">JIT</p></div>
+<div style="position:absolute; left:1028px; top:362px; width:164px; height:86px; background:#2A2142; border-radius:10px; display:flex; align-items:center; justify-content:center"><p style="font-size:24px; color:#F5F3FF">Native code</p></div>
+<div style="position:absolute; left:428px; top:480px; width:764px; display:grid; grid-template-columns:1fr 1fr; gap:14px 32px">
+<p style="font-size:26px; color:#C4BCE0">Checked before it runs</p>
+<p style="font-size:26px; color:#C4BCE0">Compiled to machine code</p>
+<p style="font-size:26px; color:#C4BCE0">Runs once per event, then stops</p>
+<p style="font-size:26px; color:#C4BCE0">Can't crash the kernel</p>
+</div>
+<div style="position:absolute; left:1280px; top:282px; width:344px; height:190px; background:#7CF2D0; border-radius:12px; padding:18px 22px; display:flex; flex-direction:column; gap:6px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:26px; font-weight:600; color:#14101F">Shared with user space</h3>
+<p style="font-size:22px; color:#14101F"><b>maps</b>: counters, state<br><b>ring buffer</b>: events<br><b>global variables</b>: settings</p>
+</div>
+<div style="position:absolute; left:1280px; top:512px; width:344px; height:190px; background:#2A2142; border-radius:12px; padding:18px 22px; display:flex; flex-direction:column; gap:6px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:28px; font-weight:600; color:#F5F3FF">Helpers</h3>
+<p style="font-size:22px; color:#C4BCE0">the only kernel functions it may call</p>
+</div>
+<svg style="position:absolute; left:0; top:0; pointer-events:none" width="1664" height="740" viewBox="0 0 1664 740">
+<defs>
+<marker id="vmA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#FF4FA3"/></marker>
+<marker id="vmB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#FF7AC0"/></marker>
+</defs>
+<g stroke="#FF4FA3" stroke-width="4" fill="none">
+<line x1="560" y1="166" x2="560" y2="278" marker-end="url(#vmA)"/>
+<line x1="1452" y1="282" x2="1452" y2="170" marker-end="url(#vmA)"/>
+<line x1="290" y1="166" x2="290" y2="318" marker-end="url(#vmA)"/>
+</g>
+<g stroke="#FF7AC0" stroke-width="4" fill="none">
+<line x1="340" y1="360" x2="396" y2="360" marker-end="url(#vmB)"/>
+<line x1="340" y1="456" x2="396" y2="456" marker-end="url(#vmB)"/>
+<line x1="340" y1="552" x2="396" y2="552" marker-end="url(#vmB)"/>
+<line x1="340" y1="648" x2="396" y2="648" marker-end="url(#vmB)"/>
+<line x1="588" y1="405" x2="624" y2="405" marker-end="url(#vmB)"/>
+<line x1="788" y1="405" x2="824" y2="405" marker-end="url(#vmB)"/>
+<line x1="988" y1="405" x2="1024" y2="405" marker-end="url(#vmB)"/>
+<line x1="1226" y1="377" x2="1274" y2="377" marker-start="url(#vmB)" marker-end="url(#vmB)"/>
+<line x1="1226" y1="607" x2="1274" y2="607" marker-end="url(#vmB)"/>
+</g>
+</svg>
+</div>
+<aside>This is where the program actually lives. The loader in user space hands bytecode to the kernel with the bpf() syscall. Inside the kernel it lands in a small virtual machine, a sandbox. The verifier checks the program first; only then does the JIT turn it into native machine code. The next slides look at the verifier and the hooks in turn. Hooks such as uprobes in your app, kprobes, tracepoints, network and scheduler events trigger it. The program can only touch the outside world in two ways: helpers, a fixed list of kernel functions it is allowed to call, and maps, memory it shares with user space. Maps hold totals and state, like counters and histograms; a ring buffer map streams one record per event, which is how you share content such as file names or request details rather than just numbers. Global variables go the other way: user space sets them, for example a PID to filter on, and the program reads them. Your tool reads maps with the same bpf() syscall and the ring buffer through mmap, so events are not copied. That sandbox is why you can run this on production hosts. Think of it in two phases: once, at load time, compile, load, verify, JIT and attach; then every time the event fires, the program runs, writes into a map or the ring buffer, and your tool reads it.</aside>
+</section>

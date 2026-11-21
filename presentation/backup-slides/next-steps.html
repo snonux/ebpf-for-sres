@@ -1,0 +1,14 @@
+<section id="next-steps" data-transition="fade" style="background:#111A2E; color:#C9D2E3; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px">
+<p style="font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#F2A65A">Next steps</p>
+<h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#F3F1EA">Start small, this week</h2>
+</div>
+<div style="display:flex; flex-direction:column; gap:20px">
+<p style="font-size:30px; line-height:1.4"><b><span style="color:#F2A65A">1</span></b>&#160; Get the examples onto a Rocky 9 staging box:</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:26px; background:#16203A; color:#E6E9EF; padding:16px 28px; border-radius:12px; white-space:nowrap">git clone https://github.com/snonux/ebpf-for-sres &amp;&amp; cd ebpf-for-sres/examples</p>
+<p style="font-size:30px; line-height:1.4"><b><span style="color:#F2A65A">2</span></b>&#160; Run them all: <b>sudo ./setup-rocky9.sh --all &amp;&amp; sudo GO=1 ./run-all.sh</b></p>
+<p style="font-size:30px; line-height:1.4"><b><span style="color:#F2A65A">3</span></b>&#160; Rehearse the Kubernetes workflow, then let ior and an LLM look at a real service:</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace; font-size:26px; background:#16203A; color:#E6E9EF; padding:16px 28px; border-radius:12px; white-space:nowrap">sudo ior -pid $(pgrep -o nginx)</p>
+</div>
+<aside>Leave people with something concrete. The examples are self-testing, so running them on a staging box is the quickest way to find out what works on your fleet before you need it. For ior, see the tutorial in docs/tutorial/tutorial.md in the repository, and the blog series linked from the README. Questions.</aside>
+</section>

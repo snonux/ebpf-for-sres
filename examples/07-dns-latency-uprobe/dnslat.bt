@@ -1,0 +1,25 @@
+#!/usr/bin/env bpftrace
+// 07: DNS lookup latency per call, from a uprobe on libc's getaddrinfo().
+// Works for every program that resolves names through glibc (curl, ssh,
+// python, java with the system resolver), without touching the program.
+// Run: sudo ./dnslat.bt   then in another shell: getent ahosts example.com
+uprobe:libc:getaddrinfo
+{
+    @start[tid] = nsecs;
+    @host[tid] = arg0;
+}
+
+uretprobe:libc:getaddrinfo
+/@start[tid]/
+{
+    printf("%-16s %-7d %8d us  ret=%d  %s\n", comm, pid,
+           (nsecs - @start[tid]) / 1000, retval, str(@host[tid]));
+    delete(@start[tid]);
+    delete(@host[tid]);
+}
+
+END
+{
+    clear(@start);
+    clear(@host);
+}

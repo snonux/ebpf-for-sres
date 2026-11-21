@@ -1,0 +1,21 @@
+#!/usr/bin/env bpftrace
+// 05: read() latency histogram in microseconds.
+// Store a timestamp per thread on entry, subtract it on return:
+// the same enter/exit pairing ior does, using stable syscall tracepoints.
+// Run: sudo ./readlat.bt   (Ctrl-C prints the histogram)
+tracepoint:syscalls:sys_enter_read
+{
+    @start[tid] = nsecs;
+}
+
+tracepoint:syscalls:sys_exit_read
+/@start[tid]/
+{
+    @usecs = hist((nsecs - @start[tid]) / 1000);
+    delete(@start[tid]);
+}
+
+END
+{
+    clear(@start);
+}
