@@ -72,7 +72,7 @@ sudo podman run -d --name app --mount type=tmpfs,destination=/store \
     registry.access.redhat.com/ubi9/ubi-minimal \
     sh -c 'while true; do dd if=/dev/zero of=/store/data bs=4k count=64 conv=fsync status=none; done'
 sudo podman run -d --name debug --privileged --pid=container:app \
-    --entrypoint /bin/sh cgr.dev/chainguard/busybox -c 'sleep 3600'
+    docker.io/library/busybox sleep 3600
 sudo podman cp storeiops debug:/tmp/storeiops
 sudo podman exec debug ps
 sudo podman exec debug /tmp/storeiops -pid 1 -path /store -bycomm -duration 15s

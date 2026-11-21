@@ -101,7 +101,7 @@ foo.bpf.c ──clang -target bpf──► foo.bpf.o ──go:embed──► mai
   `podman build -t ebpf-static -f Containerfile.static .`, see
   [13-k8s-store-iops/README.md](13-k8s-store-iops/README.md).
 
-bpftrace older than 0.20 needs `args->filename` instead of `args.filename`;
+bpftrace older than 0.19 needs `args->filename` instead of `args.filename`;
 `run-all.sh` detects this and rewrites the scripts on the fly.
 
 bpftrace 0.26 (Rocky 9.9) warns that kernel 5.14 is below its minimum of 5.15

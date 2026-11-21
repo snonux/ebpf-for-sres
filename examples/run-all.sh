@@ -30,7 +30,7 @@ result() {
     esac
 }
 
-# bpftrace older than 0.20 only knows args->name, not args.name.
+# bpftrace older than 0.19 only knows args->name, not args.name.
 compat=0
 bpftrace -e 'BEGIN { exit(); } tracepoint:syscalls:sys_enter_openat { printf("%s", str(args.filename)); }' \
     >/dev/null 2>&1 || compat=1

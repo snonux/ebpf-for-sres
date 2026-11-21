@@ -29,5 +29,5 @@
 <p style="font-size:28px; line-height:1.4">Security policy and per-container controls.</p>
 </div>
 </div>
-<aside>For observability the top row matters most. Tracepoints are a stable interface the kernel promises to keep; kprobes can hook nearly any kernel function but may break across kernel versions. uprobes do the same for user-space code. The bottom row shows eBPF is not only for tracing: Cilium, Katran and others run networking and security in eBPF too. Today we use the top row: tracepoints in most examples, a kprobe in example 06, a uprobe in example 07. The next two slides take the kernel hooks and the user-space hooks in turn.</aside>
+<aside>For observability the top row matters most. Tracepoints are an interface the kernel developers try hard to keep stable; kprobes can hook nearly any kernel function but may break across kernel versions. uprobes do the same for user-space code. The bottom row shows eBPF is not only for tracing: Cilium, Katran and others run networking and security in eBPF too. Today we use the top row: tracepoints in most examples, a kprobe in example 06, a uprobe in example 07. The next two slides take the kernel hooks and the user-space hooks in turn.</aside>
 </section>
